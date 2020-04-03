@@ -6,9 +6,9 @@ import './TextContainer.css';
 
 const TextContainer = ({ users }) => (
   <div className="textContainer">
-    <div>
+    {/* <div>
       <h1>Realtime Chat Application <span role="img" aria-label="emoji">💬</span></h1>
-    </div>
+    </div> */}
     {
       users
         ? (
