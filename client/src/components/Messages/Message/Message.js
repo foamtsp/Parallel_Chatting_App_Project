@@ -14,17 +14,20 @@ const Message = ({ message: { text, user }, name }) => {
     isSentByCurrentUser = true;
   }
 
-  if(user === 'admin'){
+  if(user.toLowerCase() === 'admin'){
     isSentBySystem = true;
   }
 
   return (
     isSentByCurrentUser
       ? (
-        <div className="messageContainer justifyEnd">
-          <p className="sentText pr-10">{trimmedName}</p>
-          <div className="messageBox backgroundBlue">
-            <p className="messageText colorWhite">{ReactEmoji.emojify(text)}</p>
+        <div className="mb-10">
+          <p className="messageContainer justifyEnd mb-0">{trimmedName}</p>
+          <div className="messageContainer justifyEnd">
+            <p className="sentText pr-10 mb-0">5:18 pm.</p>
+            <div className="messageBox backgroundBlue">
+              <p className="messageText colorWhite">{ReactEmoji.emojify(text)}</p>
+            </div>
           </div>
         </div>
         )
@@ -37,11 +40,14 @@ const Message = ({ message: { text, user }, name }) => {
             </div>
           )
         :(
-          <div className="messageContainer justifyStart">
-            <div className="messageBox backgroundLight">
-              <p className="messageText colorDark">{ReactEmoji.emojify(text)}</p>
+          <div className="mb-10">
+            <p className="messageContainer justifyStart mb-0">{user}</p>
+            <div className="messageContainer justifyStart">
+              <div className="messageBox backgroundLight">
+                <p className="messageText colorDark">{ReactEmoji.emojify(text)}</p>
+              </div>
+              <p className="sentText pl-10 ">5:18 pm.</p>
             </div>
-            <p className="sentText pl-10 ">{user}</p>
           </div>
         )
   );
