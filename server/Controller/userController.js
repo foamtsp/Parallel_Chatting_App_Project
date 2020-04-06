@@ -19,7 +19,7 @@ const createUser = (req, res) => {
     res.status(201).end()
 }
 
-//getUser/name by name or _id?
+//getUser/name by name or _id? in group model use id เป็นหลัก เลยงงๆ
 const getUser = async (req, res) => {
     const { name } = req.params
     try {
@@ -64,7 +64,7 @@ const joinGroup = async (req, res) => {
     }
 }
 
-//leaveGroup/groupname by name?
+//leaveGroup/groupname by name or id?   ไม่รุ้จะ get index จาก groupname มาอัพเดท timestamp ใง 
 
 
 module.exports = { createUser, getUser, updateStatus, joinGroup }

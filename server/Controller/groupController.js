@@ -2,7 +2,7 @@ const Group = require('../models/groupModel');
 
 //createGroup
 const createGroup = (req, res) => {
-    const group = new Group(req.body) //member and message is relation to schema what to do??
+    const group = new Group(req.body) //member and message is relation to schema require objectID??
     group.save(function (err, obj) {
         if (err) {
             res.send(err);
