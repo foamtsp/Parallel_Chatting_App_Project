@@ -1,7 +1,9 @@
 const http = require('http');
 const express = require('express');
 const socketio = require('socket.io');
+const mongoose = require('mongoose')
 const cors = require('cors');
+const MONGODB_URI = 'mongodb+srv://admin:admin@cluster0-huryl.mongodb.net/test?retryWrites=true&w=majority'
 
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./users');
 
@@ -9,6 +11,15 @@ const router = require('./router');
 
 const app = express();
 const server = http.createServer(app);
+
+mongoose.connect(MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+mongoose.connection.on('error', err => {
+  console.error('MongoDB error', err)
+})
+
 const io = socketio(server);
 
 app.use(cors());
@@ -29,11 +40,11 @@ io.on('connect', (socket) => {
 
     //get unread message if user existed
 
-    if(error) return callback(error);
+    if (error) return callback(error);
 
     socket.join(user.room);
 
-    socket.emit('message', { user: 'admin', text: `${user.name} has joined to the ${user.room} room.`});
+    socket.emit('message', { user: 'admin', text: `${user.name} has joined to the ${user.room} room.` });
     socket.broadcast.to(user.room).emit('message', { user: 'admin', text: `${user.name} has joined!` });
 
     io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room) });
@@ -58,11 +69,11 @@ io.on('connect', (socket) => {
     //save to user's timestamp logout
     //your code here
 
-    if(user) {
+    if (user) {
       io.to(user.room).emit('message', { user: 'Admin', text: `${user.name} has left.` });
-      io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room)});
+      io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room) });
     }
   })
 });
 
-server.listen(process.env.PORT || 5000, () => console.log(`Server has started.`));
+server.listen(process.env.PORT || 4000, () => console.log(`Server has started. on PORT 4000`));
