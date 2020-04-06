@@ -1,9 +1,10 @@
 const http = require('http');
 const express = require('express');
 const socketio = require('socket.io');
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 const cors = require('cors');
-const MONGODB_URI = 'mongodb+srv://admin:admin@cluster0-huryl.mongodb.net/test?retryWrites=true&w=majority'
+const MONGODB_URI =
+  'mongodb+srv://admin:admin@cluster0-huryl.mongodb.net/test?retryWrites=true&w=majority';
 
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./users');
 
@@ -14,11 +15,11 @@ const server = http.createServer(app);
 
 mongoose.connect(MONGODB_URI, {
   useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-mongoose.connection.on('error', err => {
-  console.error('MongoDB error', err)
-})
+  useUnifiedTopology: true,
+});
+mongoose.connection.on('error', (err) => {
+  console.error('MongoDB error', err);
+});
 
 const io = socketio(server);
 
@@ -44,10 +45,18 @@ io.on('connect', (socket) => {
 
     socket.join(user.room);
 
-    socket.emit('message', { user: 'admin', text: `${user.name} has joined to the ${user.room} room.` });
-    socket.broadcast.to(user.room).emit('message', { user: 'admin', text: `${user.name} has joined!` });
+    socket.emit('message', {
+      user: 'admin',
+      text: `${user.name} has joined to the ${user.room} room.`,
+    });
+    socket.broadcast
+      .to(user.room)
+      .emit('message', { user: 'admin', text: `${user.name} has joined!` });
 
-    io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room) });
+    io.to(user.room).emit('roomData', {
+      room: user.room,
+      users: getUsersInRoom(user.room),
+    });
 
     callback();
   });
@@ -70,10 +79,18 @@ io.on('connect', (socket) => {
     //your code here
 
     if (user) {
-      io.to(user.room).emit('message', { user: 'Admin', text: `${user.name} has left.` });
-      io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room) });
+      io.to(user.room).emit('message', {
+        user: 'Admin',
+        text: `${user.name} has left.`,
+      });
+      io.to(user.room).emit('roomData', {
+        room: user.room,
+        users: getUsersInRoom(user.room),
+      });
     }
-  })
+  });
 });
 
-server.listen(process.env.PORT || 4000, () => console.log(`Server has started. on PORT 4000`));
+server.listen(process.env.PORT || 4000, () =>
+  console.log(`Server has started. on PORT 4000`)
+);
