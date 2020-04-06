@@ -1,1 +1,1 @@
-const Message = require('../models/messageModel');
+const User = require('../models/userModel');
