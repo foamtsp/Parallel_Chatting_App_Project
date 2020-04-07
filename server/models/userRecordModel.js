@@ -5,14 +5,22 @@ const userRecordSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please provide a name.'],
   },
-  groupName: {
-    type: String,
-    required: [true, 'Please provide a group name.'],
+  group: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Group',
   },
   leaveTimestamp: {
     type: Date,
     default: Date.now(),
   },
+});
+
+userRecordSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'group',
+    select: 'groupName',
+  });
+  next();
 });
 
 const UserRecord = mongoose.model('UserRecord', userRecordSchema);

@@ -65,12 +65,10 @@ exports.getUser = async (req, res, next) => {
 exports.updateUser = async (req, res, next) => {
   try {
     const name = req.body.name;
-    const user = await User.findOneAndUpdate(
-      {
+    const user = await User.findOneAndUpdate({
         name,
       },
-      req.body,
-      {
+      req.body, {
         new: true,
         runValidators: true,
       }
@@ -125,15 +123,12 @@ exports.logout = async (req, res, next) => {
   try {
     const name = req.params.name;
 
-    await User.findOneAndUpdate(
-      {
-        name,
-      },
-      {
-        active: false,
-        loggedoutAt: Date.now(),
-      }
-    );
+    await User.findOneAndUpdate({
+      name,
+    }, {
+      active: false,
+      loggedoutAt: Date.now(),
+    });
 
     res.status(200).json({
       status: 'success',
@@ -147,29 +142,25 @@ exports.logout = async (req, res, next) => {
 exports.joinGroup = async (req, res, next) => {
   try {
     const name = req.params.name;
-    const { groupName } = req.body;
+    const {
+      groupName
+    } = req.body;
 
-    const user = await User.findOneAndUpdate(
-      {
-        name,
-      },
-      {
-        currentGroup: groupName,
-      }
-    );
+    const user = await User.findOneAndUpdate({
+      name,
+    }, {
+      currentGroup: groupName,
+    });
 
     // push user id in members array
     // EX. ["5c8a22c62f8fb814b56fa18b", "5c8a1f4e2f8fb814b56fa185"]
-    await Group.findOneAndUpdate(
-      {
-        groupName,
+    await Group.findOneAndUpdate({
+      groupName,
+    }, {
+      $push: {
+        members: user._id,
       },
-      {
-        $push: {
-          members: user._id,
-        },
-      }
-    );
+    });
 
     res.status(200).json({
       status: 'success',
@@ -186,38 +177,34 @@ exports.joinGroup = async (req, res, next) => {
 exports.leaveGroup = async (req, res, next) => {
   try {
     const name = req.params.name;
-    const { groupName } = req.body;
+    const {
+      groupName
+    } = req.body;
 
     // pull user from group member
-    await Group.findOneAndUpdate(
-      {
-        groupName,
+    const currentGroup = await Group.findOneAndUpdate({
+      groupName,
+    }, {
+      $pull: {
+        members: name,
       },
-      {
-        $pull: {
-          members: name,
-        },
-      }
-    );
+    });
 
     // save leaveTimeStamp by create default
     const record = await UserRecord.create({
       name,
-      groupName,
+      group: currentGroup._id
     });
 
     // push record to user and populate to output
-    const user = await User.findOneAndUpdate(
-      {
-        name,
+    const user = await User.findOneAndUpdate({
+      name,
+    }, {
+      currentGroup: null,
+      $push: {
+        userRecords: record._id,
       },
-      {
-        currentGroup: null,
-        $push: {
-          userRecords: record._id,
-        },
-      }
-    ).populate({
+    }).populate({
       path: 'userRecords',
       select: '-name',
       model: 'UserRecord',
