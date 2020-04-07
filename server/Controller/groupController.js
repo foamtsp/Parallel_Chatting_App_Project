@@ -135,27 +135,41 @@ exports.deleteGroup = async (req, res, next) => {
     // 1) Delete all messages in group (Create local function)
     const messages = group.messages
     messages.map((_id) => {
-        await Message.findByIdAndRemove(_id)
+        try {
+            await Message.findByIdAndRemove(_id)
+        } catch (error) {
+            throw new Error(error.message);
+        }
     })
 
     // 2) Delete all members in groupModel + 3.2) Delete currentGroup with this groupName userModel (Create local function)
     const members = group.members
     members.map((_id) => {
-        const result = await User.findByIdAndUpdate(_id, {
-            $pull: { groupName: groupName }
-        })
-        if (result) {
-            console.log("Deleting member ", result)
+        try {
+            await User.findByIdAndUpdate(_id, {
+                $pull: { groupName: groupName }
+            })
+        } catch (error) {
+            throw new Error(error.message);
         }
     })
 
     // 3.1) Delete all dependencies with groupName in userRecord
-    await UserRecord.findOneAndRemove({ groupName: groupName })
+    try {
+        await UserRecord.findOneAndRemove({ groupName: groupName })
+    } catch (error) {
+        throw new Error(error.message);
+    }
+
 
     // 4) Delete this group
-    await Group.deleteOne({ groupName: groupName })
-    
+    try {
+        await Group.deleteOne({ groupName: groupName })
+    } catch (error) {
+        throw new Error(error.message);
+    }
+
     res.status(200).json({
-        status:'success'
+        status: 'success'
     });
 };
