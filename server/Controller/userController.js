@@ -9,9 +9,7 @@ exports.getAllUsers = async (req, res, next) => {
 
     res.status(200).json({
       status: 'success',
-      data: {
-        users,
-      },
+      data: users,
     });
   } catch (err) {
     throw new Error(err.message);
@@ -25,9 +23,7 @@ exports.createUser = async (req, res, next) => {
 
     res.status(201).json({
       status: 'success',
-      data: {
-        user,
-      },
+      data: user,
     });
   } catch (err) {
     throw new Error(err.message);
@@ -52,9 +48,7 @@ exports.getUser = async (req, res, next) => {
 
     res.status(200).json({
       status: 'success',
-      data: {
-        user,
-      },
+      data: user,
     });
   } catch (err) {
     throw new Error(err.message);
@@ -65,10 +59,12 @@ exports.getUser = async (req, res, next) => {
 exports.updateUser = async (req, res, next) => {
   try {
     const name = req.body.name;
-    const user = await User.findOneAndUpdate({
+    const user = await User.findOneAndUpdate(
+      {
         name,
       },
-      req.body, {
+      req.body,
+      {
         new: true,
         runValidators: true,
       }
@@ -84,9 +80,7 @@ exports.updateUser = async (req, res, next) => {
 
     res.status(200).json({
       status: 'success',
-      data: {
-        user,
-      },
+      data: user,
     });
   } catch (err) {
     throw new Error(err.message);
@@ -123,12 +117,15 @@ exports.logout = async (req, res, next) => {
   try {
     const name = req.params.name;
 
-    await User.findOneAndUpdate({
-      name,
-    }, {
-      active: false,
-      loggedoutAt: Date.now(),
-    });
+    await User.findOneAndUpdate(
+      {
+        name,
+      },
+      {
+        active: false,
+        loggedoutAt: Date.now(),
+      }
+    );
 
     res.status(200).json({
       status: 'success',
@@ -142,42 +139,44 @@ exports.logout = async (req, res, next) => {
 exports.joinGroup = async (req, res, next) => {
   try {
     const name = req.params.name;
-    const {
-      groupName
-    } = req.body;
+    const { groupName } = req.body;
 
     const group = await Group.findOne({
-      groupName
+      groupName,
     });
 
     if (!group) {
       res.status(404).json({
         status: 'fail',
-        message: 'This group name dose not exists.'
-      })
-    };
+        message: 'This group name dose not exists.',
+      });
+    }
 
-    const user = await User.findOneAndUpdate({
-      name,
-    }, {
-      currentGroup: group._id,
-    });
+    const user = await User.findOneAndUpdate(
+      {
+        name,
+      },
+      {
+        currentGroup: group._id,
+      }
+    );
 
     // push user id in members array
     // EX. ["5c8a22c62f8fb814b56fa18b", "5c8a1f4e2f8fb814b56fa185"]
-    await Group.findOneAndUpdate({
-      groupName,
-    }, {
-      $push: {
-        members: user._id,
+    await Group.findOneAndUpdate(
+      {
+        groupName,
       },
-    });
+      {
+        $push: {
+          members: user._id,
+        },
+      }
+    );
 
     res.status(200).json({
       status: 'success',
-      data: {
-        user,
-      },
+      data: user,
     });
   } catch (error) {
     throw new Error(err.message);
@@ -188,34 +187,38 @@ exports.joinGroup = async (req, res, next) => {
 exports.leaveGroup = async (req, res, next) => {
   try {
     const name = req.params.name;
-    const {
-      groupName
-    } = req.body;
+    const { groupName } = req.body;
 
     // pull user from group member
-    const currentGroup = await Group.findOneAndUpdate({
-      groupName,
-    }, {
-      $pull: {
-        members: name,
+    const currentGroup = await Group.findOneAndUpdate(
+      {
+        groupName,
       },
-    });
+      {
+        $pull: {
+          members: name,
+        },
+      }
+    );
 
     // save leaveTimeStamp by create default
     const record = await UserRecord.create({
       name,
-      group: currentGroup._id
+      group: currentGroup._id,
     });
 
     // push record to user and populate to output
-    const user = await User.findOneAndUpdate({
-      name,
-    }, {
-      currentGroup: null,
-      $push: {
-        userRecords: record._id,
+    const user = await User.findOneAndUpdate(
+      {
+        name,
       },
-    }).populate({
+      {
+        currentGroup: null,
+        $push: {
+          userRecords: record._id,
+        },
+      }
+    ).populate({
       path: 'userRecords',
       select: '-name',
       model: 'UserRecord',
@@ -223,9 +226,7 @@ exports.leaveGroup = async (req, res, next) => {
 
     res.status(200).json({
       status: 'success',
-      data: {
-        user,
-      },
+      data: user,
     });
   } catch (error) {
     throw new Error(error.message);

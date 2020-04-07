@@ -10,9 +10,7 @@ exports.getAllGroups = async (req, res, next) => {
 
     res.status(200).json({
       status: 'success',
-      data: {
-        groups,
-      },
+      data: groups,
     });
   } catch (err) {
     throw new Error(err.message);
@@ -62,9 +60,7 @@ exports.createGroup = async (req, res, next) => {
 
     res.status(201).json({
       status: 'success',
-      data: {
-        group,
-      },
+      data: group
     });
   } catch (err) {
     throw new Error(err.message);
@@ -90,9 +86,7 @@ exports.getGroup = async (req, res, next) => {
 
     res.status(200).json({
       status: 'success',
-      data: {
-        group,
-      },
+      data: group
     });
 
   } catch (err) {
@@ -123,9 +117,7 @@ exports.updateGroup = async (req, res, next) => {
 
     res.status(200).json({
       status: 'success',
-      data: {
-        group,
-      },
+      data: group
     });
   } catch (err) {
     throw new Error(err.message);
@@ -151,13 +143,13 @@ exports.deleteGroup = async (req, res, next) => {
       throw new Error('Not found a group with that name.');
     };
 
-    // 1) Delete all messages in group (Create local function
+    // Delete all messages in group (Create local function
     const messages = currentGroup.messages;
     messages.forEach(id => {
       await Message.findByIdAndRemove(id);
     });
 
-    // 3.2) Delete currentGroup with this groupName userModel (Create local function)
+    // Delete currentGroup with this groupName userModel (Create local function)
     const members = currentGroup.members;
     members.forEach(id => {
       await User.findByIdAndUpdate(id, {
@@ -165,10 +157,10 @@ exports.deleteGroup = async (req, res, next) => {
       });
     });
 
-    // 3.1) Delete all dependencies with groupName in userRecord
+    // Delete all dependencies with groupName in userRecord
     await UserRecord.findByIdAndDelete(currentGroup._id);
 
-    // 4) Delete this group
+    // Delete this group
     await Group.deleteOne({
       groupName
     });

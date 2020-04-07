@@ -2,12 +2,14 @@ const mongoose = require('mongoose');
 
 const messageSchema = new mongoose.Schema({
   author: {
-    type: String,
+    type: mongoose.Schema.ObjectId,
+    ref: 'User',
     required: [true, 'Messages must have an author.'],
   },
   group: {
     type: mongoose.Schema.ObjectId,
     ref: 'Group',
+    required: [true, 'Messages must be contained with a group.'],
   },
   text: {
     type: String,
