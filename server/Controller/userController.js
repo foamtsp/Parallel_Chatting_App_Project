@@ -1,5 +1,5 @@
 const User = require('../models/userModel');
-const UserRecord = require('../models/userRecord');
+const UserRecord = require('../models/userRecordModel');
 const Group = require('../models/groupModel');
 
 // Get all users

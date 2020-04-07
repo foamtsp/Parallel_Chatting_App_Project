@@ -5,9 +5,9 @@ const messageSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Messages must have an author.'],
   },
-  groupName: {
-    type: String,
-    required: [true, 'Message must be contained within a group.'],
+  group: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Group',
   },
   text: {
     type: String,
@@ -20,6 +20,14 @@ const messageSchema = new mongoose.Schema({
   updatedAt: {
     type: Date,
   },
+});
+
+messageSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'group',
+    select: 'groupName',
+  });
+  next();
 });
 
 const Message = mongoose.model('Message', messageSchema);
