@@ -1,0 +1,8 @@
+.Row {
+    display: table;
+    width: 10%; /*Optional*/
+    table-layout: fixed; /*Optional*/
+  }
+  .Column {
+    display: table-cell;
+  }

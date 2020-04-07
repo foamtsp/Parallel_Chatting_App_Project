@@ -1,0 +1,12 @@
+.Row {
+  display: table;
+  width: 100%; /*Optional*/
+  table-layout: fixed; /*Optional*/
+}
+.Column {
+  display: table-cell;
+}
+
+.GroupContainer{
+  padding-top: 25px;
+}
