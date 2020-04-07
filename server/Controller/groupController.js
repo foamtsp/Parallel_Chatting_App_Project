@@ -71,7 +71,7 @@ exports.createGroup = async (req, res, next) => {
 exports.getGroup = async (req, res, next) => {
     const name = req.params.name;
 
-    const group = await Group.findOne({ GroupName: name });
+    const group = await Group.findOne({ groupName: name });
 
     if (!group) {
         res.status(404).json({
@@ -96,7 +96,7 @@ exports.updateGroup = async (req, res, next) => {
     const newGroupName = req.body.groupName;
 
     const group = await Group.findOneAndUpdate(
-        { GroupName: name },
+        { groupName: name },
         {
             groupName: newGroupName,
         }
