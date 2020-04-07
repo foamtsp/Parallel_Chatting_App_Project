@@ -138,7 +138,7 @@ exports.logout = async (req, res, next) => {
   }
 };
 
-// Join group BUT group name must exiting in DB NOT check in this function
+// Join group
 exports.joinGroup = async (req, res, next) => {
   try {
     const name = req.params.name;
@@ -146,10 +146,21 @@ exports.joinGroup = async (req, res, next) => {
       groupName
     } = req.body;
 
+    const group = await Group.findOne({
+      groupName
+    });
+
+    if (!group) {
+      res.status(404).json({
+        status: 'fail',
+        message: 'This group name dose not exists.'
+      })
+    };
+
     const user = await User.findOneAndUpdate({
       name,
     }, {
-      currentGroup: groupName,
+      currentGroup: group._id,
     });
 
     // push user id in members array

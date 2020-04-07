@@ -102,7 +102,6 @@ exports.getGroup = async (req, res, next) => {
 
 // Edit group with name: EX. edit groupName NOT kick the member because it has trouble relations!!
 exports.updateGroup = async (req, res, next) => {
-
   try {
     const name = req.params.name;
     // ONLY edit groupName
@@ -138,14 +137,13 @@ exports.updateGroup = async (req, res, next) => {
 // pass by params or body????
 exports.deleteGroup = async (req, res, next) => {
   try {
-    const {
-      groupName
-    } = req.params
+    const groupName = req.params.name;
 
-    const group = await Group.findOne({
-      groupName: groupName
-    })
-    if (!group) {
+    const currentGroup = await Group.findOne({
+      groupName
+    });
+
+    if (!currentGroup) {
       res.status(404).json({
         status: 'fail',
         message: 'Not found a group with that name.',
@@ -153,74 +151,32 @@ exports.deleteGroup = async (req, res, next) => {
       throw new Error('Not found a group with that name.');
     };
 
-    // 1) Delete all messages in group (Create local function)
-    const messages = group.messages
-    messages.map((_id) => {
-<<<<<<< Updated upstream
-        try {
-            await Message.findByIdAndRemove(_id)
-        } catch (error) {
-            throw new Error(error.message);
-        }
-=======
-      await Message.findByIdAndRemove(_id)
->>>>>>> Stashed changes
-    })
+    // 1) Delete all messages in group (Create local function
+    const messages = currentGroup.messages;
+    messages.forEach(id => {
+      await Message.findByIdAndRemove(id);
+    });
 
-    // 2) Delete all members in groupModel + 3.2) Delete currentGroup with this groupName userModel (Create local function)
-    const members = group.members
-    members.map((_id) => {
-<<<<<<< Updated upstream
-        try {
-            await User.findByIdAndUpdate(_id, {
-                $pull: { groupName: groupName }
-            })
-        } catch (error) {
-            throw new Error(error.message);
-=======
-      const result = await User.findByIdAndUpdate(_id, {
-        $pull: {
-          groupName: groupName
->>>>>>> Stashed changes
-        }
-      })
-      if (result) {
-        console.log("Deleting member ", result)
-      }
+    // 3.2) Delete currentGroup with this groupName userModel (Create local function)
+    const members = currentGroup.members;
+    members.forEach(id => {
+      await User.findByIdAndUpdate(id, {
+        currentGroup: null
+      });
     });
 
     // 3.1) Delete all dependencies with groupName in userRecord
-<<<<<<< Updated upstream
-    try {
-        await UserRecord.findOneAndRemove({ groupName: groupName })
-    } catch (error) {
-        throw new Error(error.message);
-    }
-
-
-    // 4) Delete this group
-    try {
-        await Group.deleteOne({ groupName: groupName })
-    } catch (error) {
-        throw new Error(error.message);
-    }
-
-    res.status(200).json({
-        status: 'success'
-=======
-    await UserRecord.findOneAndRemove({
-      groupName: groupName
-    })
+    await UserRecord.findByIdAndDelete(currentGroup._id);
 
     // 4) Delete this group
     await Group.deleteOne({
-      groupName: groupName
-    })
-
-    res.status(200).json({
-      status: 'success'
->>>>>>> Stashed changes
+      groupName
     });
+
+    res.status(204).json({
+      status: 'success'
+    });
+
   } catch (err) {
     throw new Error(err.message);
   }

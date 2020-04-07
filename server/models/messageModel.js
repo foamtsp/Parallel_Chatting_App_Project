@@ -22,13 +22,13 @@ const messageSchema = new mongoose.Schema({
   },
 });
 
-messageSchema.pre(/^find/, function (next) {
-  this.populate({
-    path: 'group',
-    select: 'groupName',
-  });
-  next();
-});
+// messageSchema.pre(/^find/, function (next) {
+//   this.populate({
+//     path: 'group',
+//     select: 'groupName',
+//   });
+//   next();
+// });
 
 const Message = mongoose.model('Message', messageSchema);
 

@@ -9,13 +9,14 @@ const userSchema = new mongoose.Schema({
     maxlength: [20, 'A username must have less or equal then 20 characters.'],
     minlength: [4, 'A username must have more or equal then 4 characters'],
   },
-  currentGroup: String,
-  userRecords: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: 'UserRecord',
-    },
-  ],
+  currentGroup: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Group',
+  },
+  userRecords: [{
+    type: mongoose.Schema.ObjectId,
+    ref: 'UserRecord',
+  }, ],
   active: {
     type: Boolean,
     default: true,
@@ -28,6 +29,10 @@ groupSchema.pre(/^find/, function (next) {
     path: 'userRecords',
     select: '-name',
   });
+  this.populate({
+    path: 'currentGroup',
+    select: 'groupName'
+  })
   next();
 });
 

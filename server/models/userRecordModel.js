@@ -15,13 +15,13 @@ const userRecordSchema = new mongoose.Schema({
   },
 });
 
-userRecordSchema.pre(/^find/, function (next) {
-  this.populate({
-    path: 'group',
-    select: 'groupName',
-  });
-  next();
-});
+// userRecordSchema.pre(/^find/, function (next) {
+//   this.populate({
+//     path: 'group',
+//     select: 'groupName',
+//   });
+//   next();
+// });
 
 const UserRecord = mongoose.model('UserRecord', userRecordSchema);
 
