@@ -1,16 +1,21 @@
-const express = require("express");
-const router = express.Router();
+const express = require('express');
 const userController = require('./Controller/userController');
 const groupController = require('./Controller/groupController');
+const messageController = require('./Controller/messageController');
 
-//user
-router.post("/createuser", userController.createUser)
-router.get("/getuser/:name", userController.getUser)
-router.put("/update/:name", userController.updateStatus)
-router.put("/joingroup/:name", userController.joinGroup)
+const router = express.Router();
 
-//group
-router.post("/creategroup", groupController.createGroup)
-router.get("/groups", groupController.getAllGroup)
+// User routes
+router.post('/createuser', userController.createUser);
+router.get('/getuser/:name', userController.getUser);
+router.put('/update/:name', userController.updateStatus);
+router.put('/joingroup/:name', userController.joinGroup);
+
+// Group routes
+router.post('/creategroup', groupController.createGroup);
+router.get('/groups', groupController.getAllGroup);
+
+// Message routes
+router.get('/messages', messageController.getAllGroupMessages);
 
 module.exports = router;

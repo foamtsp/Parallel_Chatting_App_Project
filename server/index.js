@@ -2,13 +2,18 @@ const http = require('http');
 const express = require('express');
 const socketio = require('socket.io');
 const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+const morgan = require('morgan');
 const cors = require('cors');
 const router = require('./router');
-const { addUser, removeUser, getUser, getUsersInRoom } = require('./users');
+// const { addUser, removeUser, getUser, getUsersInRoom } = require('./users');
 
-const SERVER_PORT = 4000;
-const MONGODB_URI =
-  'mongodb+srv://admin:admin@cluster0-huryl.mongodb.net/test?retryWrites=true&w=majority';
+dotenv.config({
+  path: './config.env',
+});
+
+const SERVER_PORT = process.env.PORT || 6000;
+const MONGODB_URI = process.env.DATABASE;
 const MONGODB_OPTIONS = {
   dbName: 'Chat-app',
   useNewUrlParser: true,
@@ -30,73 +35,91 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 
+// Development logging
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+  app.use(
+    express.json({
+      limit: '10kb',
+    })
+  );
+}
+
 app.use(cors());
-app.use(router);
+app.use('/api', router);
 
-io.on('connect', (socket) => {
-  //fix to join after select group in left panel
-  socket.on('join', ({ name, room }, callback) => {
-    const { error, user } = addUser({
-      id: socket.id,
-      name,
-      room,
-    });
+// Listen on every connection
+// io.on('connection', (socket) => {
+//   console.log('New user connected');
 
-    //get unread message if user existed
+//   socket.on('join_group', (data) => {
+//     const { userName, groupName } = data;
 
-    if (error) return callback(error);
+//   });
 
-    socket.join(user.room);
+//   //fix to join after select group in left panel
+//   socket.on('join', ({ name, room }, callback) => {
+//     const { error, user } = addUser({
+//       id: socket.id,
+//       name,
+//       room,
+//     });
 
-    socket.emit('message', {
-      user: 'admin',
-      text: `${user.name} has joined to the ${user.room} room.`,
-    });
-    socket.broadcast.to(user.room).emit('message', {
-      user: 'admin',
-      text: `${user.name} has joined!`,
-    });
+//     //get unread message if user existed
 
-    io.to(user.room).emit('roomData', {
-      room: user.room,
-      users: getUsersInRoom(user.room),
-    });
+//     if (error) return callback(error);
 
-    callback();
-  });
+//     socket.join(user.room);
 
-  socket.on('sendMessage', (message, callback) => {
-    const user = getUser(socket.id);
+//     socket.emit('message', {
+//       user: 'admin',
+//       text: `${user.name} has joined to the ${user.room} room.`,
+//     });
+//     socket.broadcast.to(user.room).emit('message', {
+//       user: 'admin',
+//       text: `${user.name} has joined!`,
+//     });
 
-    io.to(user.room).emit('message', {
-      user: user.name,
-      text: message,
-    });
+//     io.to(user.room).emit('roomData', {
+//       room: user.room,
+//       users: getUsersInRoom(user.room),
+//     });
 
-    //save message to db
-    //your code here
+//     callback();
+//   });
 
-    callback();
-  });
+//   socket.on('sendMessage', (message, callback) => {
+//     const user = getUser(socket.id);
 
-  socket.on('disconnect', () => {
-    const user = removeUser(socket.id);
+//     io.to(user.room).emit('message', {
+//       user: user.name,
+//       text: message,
+//     });
 
-    //save to user's timestamp logout
-    //your code here
+//     //save message to db
+//     //your code here
 
-    if (user) {
-      io.to(user.room).emit('message', {
-        user: 'Admin',
-        text: `${user.name} has left.`,
-      });
-      io.to(user.room).emit('roomData', {
-        room: user.room,
-        users: getUsersInRoom(user.room),
-      });
-    }
-  });
-});
+//     callback();
+//   });
+
+//   socket.on('disconnect', () => {
+//     const user = removeUser(socket.id);
+
+//     //save to user's timestamp logout
+//     //your code here
+
+//     if (user) {
+//       io.to(user.room).emit('message', {
+//         user: 'Admin',
+//         text: `${user.name} has left.`,
+//       });
+//       io.to(user.room).emit('roomData', {
+//         room: user.room,
+//         users: getUsersInRoom(user.room),
+//       });
+//     }
+//   });
+// });
 
 server.listen(SERVER_PORT, () => {
   console.log(`Server is running on port ${SERVER_PORT}...`);
