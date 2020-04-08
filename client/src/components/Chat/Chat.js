@@ -9,6 +9,7 @@ import Input from '../Input/Input';
 
 import './Chat.css';
 import GroupBar from '../GroupBar/GroupBar';
+import GroupList from "../GroupList/GroupList";
 let socket;
 
 const Chat = ({ location }) => {
@@ -52,7 +53,7 @@ const Chat = ({ location }) => {
     }
   }
 
-  if(room=="login"){
+  if(room=="default"){
     return(
     
     <div className="outerContainer">

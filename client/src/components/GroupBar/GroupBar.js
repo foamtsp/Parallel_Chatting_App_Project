@@ -7,15 +7,7 @@ import GroupList from "../GroupList/GroupList";
 
 
 
-
-let socket;
-
 const GroupBar = ({ name }) => {
- 
-  const onCreateGroup = () => {
-    console.log('test');
-  }
-
   
 
   return (
@@ -31,7 +23,7 @@ const GroupBar = ({ name }) => {
           </div>
           <div className="GroupContainer">
               <GroupList name={name}/>
-            </div>
+          </div>
         </div>
           
   );

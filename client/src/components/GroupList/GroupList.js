@@ -1,60 +1,29 @@
-import React, { Component } from 'react';
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import './GroupList.css'
+
+const onCreateGroup = (name,group) => {
+  window.location.href = "/chat?name="+name+'&room='+group;
+}
 
 
 
-
-class GroupList extends Component {
-
-  constructor(props) {
-    super(props);
-    this.name = props.name;
-  
-    this.state = {
-      listing:['Group1','Group2']
-    }
-    this.renderList = this.renderList.bind(this);
-
-  }
-
-  // componentDidMount() {
-  //   this.getalljob()
-  // }
-
-  // getalljob() {
-  //   fetch("/user/groups/" + this.name, {
-  //     method: 'GET',
-  //     headers: { 'Content-Type': 'application/json' },
-  //     })
-  //     .then(response => {
-  //           this.setState({
-  //               listing: response.data,
-  //           })
-  //       })
-       
-  // }
-
-  renderList(){
+const renderList = (name,listing) => {
     return (
-      this.state.listing.map((group) => {
+      listing.map((group) => {
         return (
-          <div>
-            <Link to={`/chat?name=${this.name}&room=${group}`}>
+
+              <li onClick={()=>onCreateGroup(name,group)}>
                 {group}
-            </Link>
-          </div>
-          
-          
+              </li>
         )
     })
     )
   }
 
+const GroupList = ({ name }) => {
+  
 
-  render() {
-    return(<div>{this.renderList()}</div>)
-  }
-
-
+  return(<ul>{renderList(name,['Group1','Group2'])}</ul>)
 }
+
 export default GroupList;
