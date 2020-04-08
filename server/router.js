@@ -3,10 +3,6 @@ const router = express.Router();
 const userController = require('./Controller/userController');
 const groupController = require('./Controller/groupController');
 
-router.get("/", (req, res) => {
-  res.send({ response: "Server is up and running." }).status(200);
-});
-
 //user
 router.post("/createuser", userController.createUser)
 router.get("/getuser/:name", userController.getUser)

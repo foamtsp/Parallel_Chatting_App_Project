@@ -3,36 +3,35 @@ const express = require('express');
 const socketio = require('socket.io');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const MONGODB_URI =
-  'mongodb+srv://admin:admin@cluster0-huryl.mongodb.net/test?retryWrites=true&w=majority';
-
+const router = require('./router');
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./users');
 
-const router = require('./router');
+const SERVER_PORT = 4000;
+const MONGODB_URI =
+  'mongodb+srv://admin:admin@cluster0-huryl.mongodb.net/test?retryWrites=true&w=majority';
+const MONGODB_OPTIONS = {
+  dbName: 'Chat-app',
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+};
+
+// Connect to mongoDB
+mongoose
+  .connect(MONGODB_URI, MONGODB_OPTIONS)
+  .then(() => console.log('DB connection successful!'))
+  .catch((err) => {
+    throw new Error(err.message);
+  });
+mongoose.connection.on('error', (err) => {
+  console.error('MongoDB error: ', err);
+});
 
 const app = express();
 const server = http.createServer(app);
-
-mongoose.connect(MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-mongoose.connection.on('error', (err) => {
-  console.error('MongoDB error', err);
-});
-
 const io = socketio(server);
 
 app.use(cors());
 app.use(router);
-
-//function join group
-//add user to group in db
-
-//create group
-
-//function leave group
-//delete user from group in db
 
 io.on('connect', (socket) => {
   //fix to join after select group in left panel
@@ -99,6 +98,6 @@ io.on('connect', (socket) => {
   });
 });
 
-server.listen(process.env.PORT || 4000, () =>
-  console.log(`Server has started. on PORT 4000`)
-);
+server.listen(SERVER_PORT, () => {
+  console.log(`Server is running on port ${SERVER_PORT}...`);
+});
