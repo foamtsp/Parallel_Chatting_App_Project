@@ -1,3 +1,4 @@
+const ObjectId = require('mongoose').Types.ObjectId
 const Group = require('../models/groupModel');
 const User = require('../models/userModel');
 const UserRecord = require('../models/userRecordModel');
@@ -39,17 +40,26 @@ exports.createGroup = async (req, res, next) => {
         message: 'A Group must have an founder.',
       });
       throw new Error('A Group must have an founder.');
-    }
+    };
+
+    // Check existing user
+    const checkUser = await User.findById(userId);
+
+    if (!checkUser) {
+      res.status(404).json({
+        status: 'fail',
+        message: 'Please log in and get valid userId.',
+      });
+      throw new Error('Please log in and get valid userId.');
+    };
 
     const group = await Group.create({
       groupName,
-      $set: {
-        members: [userId]
-      },
+      members: [ObjectId(userId)],
     });
 
     // Update currentGroup
-    const user = await User.findByIdAndUpdate(userId, {
+    await User.findByIdAndUpdate(userId, {
       currentGroup: group._id,
     });
 
@@ -108,6 +118,8 @@ exports.updateGroup = async (req, res, next) => {
       groupName: name
     }, {
       groupName: newGroupName,
+    }, {
+      new: true
     });
 
     if (!group) {
@@ -162,6 +174,8 @@ exports.deleteGroup = async (req, res, next) => {
     const memberPromises = members.map(id => {
       User.findByIdAndUpdate(id, {
         currentGroup: null
+      }, {
+        new: true
       });
     });
     await Promise.all(memberPromises);
@@ -174,9 +188,8 @@ exports.deleteGroup = async (req, res, next) => {
       groupName
     });
 
-    res.status(204).json({
-      status: 'success'
-    });
+    console.log(`Group ID: "${currentGroup._id}" has been deleted`);
+    res.status(204).json();
 
   } catch (err) {
     res.status(500).json({

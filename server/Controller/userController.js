@@ -28,12 +28,13 @@ exports.isSignedup = async (req, res, next) => {
       name
     }, {
       active: true
+    }, {
+      new: true
     });
 
     if (!user) {
       return next();
     };
-    user.active = true;
 
     console.log(`Existing user, already logged in with id "${user._id}."`);
     res.status(200).json({
@@ -149,10 +150,7 @@ exports.deleteUser = async (req, res, next) => {
       throw new Error('No user found with that name');
     }
 
-    res.status(204).json({
-      status: 'success',
-      data: null,
-    });
+    res.status(204);
   } catch (err) {
     res.status(500).json({
       status: 'error',
@@ -172,6 +170,8 @@ exports.logout = async (req, res, next) => {
     }, {
       active: false,
       loggedoutAt: Date.now(),
+    }, {
+      new: true
     });
 
     res.status(200).json({
@@ -209,6 +209,8 @@ exports.joinGroup = async (req, res, next) => {
       name,
     }, {
       currentGroup: group._id,
+    }, {
+      new: true
     });
 
     // push user id in members array
@@ -219,6 +221,8 @@ exports.joinGroup = async (req, res, next) => {
       $push: {
         members: user._id,
       },
+    }, {
+      new: true
     });
 
     res.status(200).json({
@@ -266,6 +270,8 @@ exports.leaveGroup = async (req, res, next) => {
       $push: {
         userRecords: record._id,
       },
+    }, {
+      new: true
     }).populate({
       path: 'userRecords',
       select: '-name',

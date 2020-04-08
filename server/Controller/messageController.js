@@ -66,6 +66,8 @@ exports.editMessage = async (req, res, next) => {
       author: userId,
     }, {
       text: message,
+    }, {
+      new: true
     });
 
     if (!newMessage) {
