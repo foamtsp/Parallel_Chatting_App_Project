@@ -119,7 +119,8 @@ exports.updateGroup = async (req, res, next) => {
     }, {
       groupName: newGroupName,
     }, {
-      new: true
+      new: true,
+      runValidators: true
     });
 
     if (!group) {

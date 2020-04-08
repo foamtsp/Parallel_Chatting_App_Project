@@ -40,12 +40,14 @@ const io = socketio(server);
 // Development logging
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
-  app.use(
-    express.json({
-      limit: '10kb',
-    })
-  );
 }
+
+// Body parser and limits size
+app.use(
+  express.json({
+    limit: '10kb',
+  })
+);
 
 app.use(cors());
 app.use('/api', router);

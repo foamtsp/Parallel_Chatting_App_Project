@@ -6,6 +6,12 @@ const groupSchema = new mongoose.Schema({
     required: [true, 'Please fill the group name.'],
     trim: true,
     unique: true,
+    validate: {
+      validator: function (name) {
+        return name.split(' ').length < 2;
+      },
+      message: 'Group have must not have white space.'
+    }
   },
   members: [{
     type: mongoose.Schema.ObjectId,
