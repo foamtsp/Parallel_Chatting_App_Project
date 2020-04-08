@@ -1,26 +1,40 @@
 const mongoose = require('mongoose');
 
 const messageSchema = new mongoose.Schema({
-    author: {
-        type: String,
-        required: [true, 'Messages must have an author.']
-    },
-    groupName: {
-        type: String,
-        required: [true, 'Message must be contained within a group.']
-    },
-    text: {
-        type: String,
-        required: [true, 'A message must have at least one character.']
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now()
-    },
-    updatedAt: {
-        type: Date
-    }
+  author: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'User',
+    required: [true, 'Messages must have an author.'],
+  },
+  group: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Group',
+    required: [true, 'Messages must be contained with a group.'],
+  },
+  text: {
+    type: String,
+    required: [true, 'A message must have at least one character.'],
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now(),
+  },
+  updatedAt: {
+    type: Date,
+  },
 });
+
+messageSchema.index({
+  group: 1
+});
+
+// messageSchema.pre(/^find/, function (next) {
+//   this.populate({
+//     path: 'group',
+//     select: 'groupName',
+//   });
+//   next();
+// });
 
 const Message = mongoose.model('Message', messageSchema);
 

@@ -1,19 +1,33 @@
 const mongoose = require('mongoose');
 
 const groupSchema = new mongoose.Schema({
-    groupName: {
-        type: String,
-        required: [true, 'Please fill the group name.'],
-        unique: true
-    },
-    members: { // rel to user Object
-        type: [String],
-        required: [true, 'Group must have at least one member.']
-    },
-    messages: { // rel to message Object
-        type: [String]
-    }
+  groupName: {
+    type: String,
+    required: [true, 'Please fill the group name.'],
+    trim: true,
+    unique: true,
+  },
+  members: [{
+    type: mongoose.Schema.ObjectId,
+    ref: 'User',
+  }, ],
+  messages: [{
+    type: mongoose.Schema.ObjectId,
+    ref: 'Message',
+  }, ],
 });
+
+// groupSchema.pre(/^find/, function (next) {
+//   this.populate({
+//     path: 'members',
+//     select: 'name',
+//   });
+//   this.populate({
+//     path: 'messages',
+//     select: '-__v',
+//   });
+//   next();
+// });
 
 const Group = mongoose.model('Group', groupSchema);
 
