@@ -20,12 +20,41 @@ exports.getAllUsers = async (req, res, next) => {
   }
 };
 
+// Check existing user
+exports.isSignedup = async (req, res, next) => {
+  try {
+    const name = req.body.name;
+    const user = await User.findOneAndUpdate({
+      name
+    }, {
+      active: true
+    });
+
+    if (!user) {
+      next();
+    };
+    user.active = true;
+
+    console.log(`Existing user, already logged in.`);
+    res.status(200).json({
+      status: 'success',
+      data: user
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: 'error',
+      message: (err.message)
+    });
+    throw new Error(err.message);
+  };
+};
+
 // Create user
 exports.createUser = async (req, res, next) => {
   try {
-    console.log(req.body);
-
     const user = await User.create(req.body);
+
+    console.log(`User has been created with id ${user._id}.`);
 
     res.status(201).json({
       status: 'success',
@@ -72,15 +101,16 @@ exports.getUser = async (req, res, next) => {
 // Update user
 exports.updateUser = async (req, res, next) => {
   try {
-    const name = req.body.name;
+    const name = req.params.name;
+    const newName = req.body.name;
     const user = await User.findOneAndUpdate({
-        name,
-      },
-      req.body, {
-        new: true,
-        runValidators: true,
-      }
-    );
+      name,
+    }, {
+      name: newName
+    }, {
+      new: true,
+      runValidators: true,
+    });
 
     if (!user) {
       res.status(404).json({
@@ -195,7 +225,7 @@ exports.joinGroup = async (req, res, next) => {
       status: 'success',
       data: user,
     });
-  } catch (error) {
+  } catch (err) {
     res.status(500).json({
       status: 'error',
       message: (err.message)
@@ -208,6 +238,7 @@ exports.joinGroup = async (req, res, next) => {
 exports.leaveGroup = async (req, res, next) => {
   try {
     const name = req.params.name;
+
     const {
       groupName
     } = req.body;
@@ -245,11 +276,11 @@ exports.leaveGroup = async (req, res, next) => {
       status: 'success',
       data: user,
     });
-  } catch (error) {
+  } catch (err) {
     res.status(500).json({
       status: 'error',
       message: (err.message)
     });
-    throw new Error(error.message);
+    throw new Error(err.message);
   }
 };

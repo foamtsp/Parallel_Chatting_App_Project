@@ -6,8 +6,20 @@ const messageController = require('./Controller/messageController');
 const router = express.Router();
 
 // User routes
-router.post('/users', userController.createUser);
-// router.get('/getuser/:name', userController.getUser);
+router
+  .route('/users')
+  .get(userController.getAllUsers)
+  .post(userController.isSignedup, userController.createUser);
+
+router.get('/users/:name/logout', userController.logout);
+router.post('/users/:name/joingroup', userController.joinGroup);
+router.post('/users/:name/leavegroup', userController.leaveGroup);
+
+router
+  .route('/users/:name')
+  .get(userController.getUser)
+  .patch(userController.updateUser)
+  .delete(userController.deleteUser);
 // router.put('/update/:name', userController.updateStatus);
 // router.put('/joingroup/:name', userController.joinGroup);
 
