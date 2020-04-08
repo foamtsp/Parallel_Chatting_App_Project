@@ -145,17 +145,19 @@ exports.deleteGroup = async (req, res, next) => {
 
     // Delete all messages in group (Create local function
     const messages = currentGroup.messages;
-    messages.forEach(id => {
-      await Message.findByIdAndRemove(id);
+    const messagePromises = messages.map(id => {
+      Message.findByIdAndRemove(id);
     });
+    await Promise.all(messagePromises);
 
     // Delete currentGroup with this groupName userModel (Create local function)
     const members = currentGroup.members;
-    members.forEach(id => {
-      await User.findByIdAndUpdate(id, {
+    const memberPromises = members.map(id => {
+      User.findByIdAndUpdate(id, {
         currentGroup: null
       });
     });
+    await Promise.all(memberPromises);
 
     // Delete all dependencies with groupName in userRecord
     await UserRecord.findByIdAndDelete(currentGroup._id);

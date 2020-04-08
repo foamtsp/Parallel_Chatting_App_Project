@@ -6,7 +6,10 @@ exports.sendMessage = async (req, res, next) => {
   try {
     // Create message to messageModel
     const groupName = req.params.name;
-    const { userId, message } = req.body;
+    const {
+      userId,
+      message
+    } = req.body;
 
     // Check this group exists
     const group = await Group.findOne({
@@ -21,49 +24,47 @@ exports.sendMessage = async (req, res, next) => {
       throw new Error('Not Found this group with that group name.');
     }
 
-    const message = await Message.create({
+    const newMessage = await Message.create({
       author: userId,
       group: group._id,
       text: message,
     });
 
     // Add message id to the group
-    await Group.findOneAndUpdate(
-      {
-        groupName,
+    await Group.findOneAndUpdate({
+      groupName,
+    }, {
+      $push: {
+        messages: newMessage._id,
       },
-      {
-        $push: {
-          messages: message._id,
-        },
-      }
-    );
+    });
 
     res.status(201).json({
       status: 'success',
-      data: message,
+      data: newMessage,
     });
   } catch (err) {
     throw new Error(err.message);
   }
 };
 
+// NOT USE
 exports.editMessage = async (req, res, next) => {
   try {
     const msgId = req.params.id;
-    const { userId, message } = req.body;
+    const {
+      userId,
+      message
+    } = req.body;
 
-    const message = await Message.findOneAndUpdate(
-      {
-        _id: msgId,
-        author: userId,
-      },
-      {
-        text: message,
-      }
-    );
+    const newMessage = await Message.findOneAndUpdate({
+      _id: msgId,
+      author: userId,
+    }, {
+      text: message,
+    });
 
-    if (!message) {
+    if (!newMessage) {
       res.status(404).json({
         status: 'fail',
         message: 'Not Found this message with that message id.',
@@ -73,7 +74,7 @@ exports.editMessage = async (req, res, next) => {
 
     res.status(200).json({
       status: 'success',
-      data: message,
+      data: newMessage,
     });
   } catch (err) {
     throw new Error(err.message);

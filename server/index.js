@@ -17,6 +17,8 @@ const MONGODB_URI = process.env.DATABASE;
 const MONGODB_OPTIONS = {
   dbName: 'Chat-app',
   useNewUrlParser: true,
+  useFindAndModify: false,
+  useCreateIndex: true,
   useUnifiedTopology: true,
 };
 

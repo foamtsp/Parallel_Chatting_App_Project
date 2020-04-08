@@ -7,15 +7,15 @@ const router = express.Router();
 
 // User routes
 router.post('/createuser', userController.createUser);
-router.get('/getuser/:name', userController.getUser);
-router.put('/update/:name', userController.updateStatus);
-router.put('/joingroup/:name', userController.joinGroup);
+// router.get('/getuser/:name', userController.getUser);
+// router.put('/update/:name', userController.updateStatus);
+// router.put('/joingroup/:name', userController.joinGroup);
 
 // Group routes
-router.post('/creategroup', groupController.createGroup);
-router.get('/groups', groupController.getAllGroup);
+// router.post('/creategroup', groupController.createGroup);
+// router.get('/groups', groupController.getAllGroup);
 
 // Message routes
-router.get('/messages', messageController.getAllGroupMessages);
+// router.get('/messages', messageController.getAllGroupMessages);
 
 module.exports = router;

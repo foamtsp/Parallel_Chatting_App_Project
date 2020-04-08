@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
   loggedoutAt: Date,
 });
 
-groupSchema.pre(/^find/, function (next) {
+userSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'userRecords',
     select: '-name',
