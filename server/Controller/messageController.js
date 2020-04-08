@@ -44,6 +44,10 @@ exports.sendMessage = async (req, res, next) => {
       data: newMessage,
     });
   } catch (err) {
+    res.status(500).json({
+      status: 'error',
+      message: (err.message)
+    });
     throw new Error(err.message);
   }
 };
@@ -77,6 +81,10 @@ exports.editMessage = async (req, res, next) => {
       data: newMessage,
     });
   } catch (err) {
+    res.status(500).json({
+      status: 'error',
+      message: (err.message)
+    });
     throw new Error(err.message);
   }
 };
@@ -106,6 +114,10 @@ exports.getAllGroupMessages = async (req, res, next) => {
       data: group.messages,
     });
   } catch (err) {
+    res.status(500).json({
+      status: 'error',
+      message: (err.message)
+    });
     throw new Error(err.message);
   }
 };

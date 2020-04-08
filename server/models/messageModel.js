@@ -24,6 +24,10 @@ const messageSchema = new mongoose.Schema({
   },
 });
 
+messageSchema.index({
+  group: 1
+});
+
 // messageSchema.pre(/^find/, function (next) {
 //   this.populate({
 //     path: 'group',

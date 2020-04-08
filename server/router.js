@@ -6,7 +6,7 @@ const messageController = require('./Controller/messageController');
 const router = express.Router();
 
 // User routes
-router.post('/createuser', userController.createUser);
+router.post('/users', userController.createUser);
 // router.get('/getuser/:name', userController.getUser);
 // router.put('/update/:name', userController.updateStatus);
 // router.put('/joingroup/:name', userController.joinGroup);

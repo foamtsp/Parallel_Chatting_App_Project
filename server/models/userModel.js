@@ -12,11 +12,12 @@ const userSchema = new mongoose.Schema({
   currentGroup: {
     type: mongoose.Schema.ObjectId,
     ref: 'Group',
+    default: null
   },
   userRecords: [{
     type: mongoose.Schema.ObjectId,
-    ref: 'UserRecord',
-  }, ],
+    ref: 'UserRecord'
+  }],
   active: {
     type: Boolean,
     default: true,

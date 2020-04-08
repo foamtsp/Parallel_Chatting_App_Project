@@ -13,6 +13,10 @@ exports.getAllGroups = async (req, res, next) => {
       data: groups,
     });
   } catch (err) {
+    res.status(500).json({
+      status: 'error',
+      message: (err.message)
+    });
     throw new Error(err.message);
   }
 };
@@ -63,6 +67,10 @@ exports.createGroup = async (req, res, next) => {
       data: group
     });
   } catch (err) {
+    res.status(500).json({
+      status: 'error',
+      message: (err.message)
+    });
     throw new Error(err.message);
   }
 };
@@ -90,6 +98,10 @@ exports.getGroup = async (req, res, next) => {
     });
 
   } catch (err) {
+    res.status(500).json({
+      status: 'error',
+      message: (err.message)
+    });
     throw new Error(err.message);
   }
 };
@@ -120,6 +132,10 @@ exports.updateGroup = async (req, res, next) => {
       data: group
     });
   } catch (err) {
+    res.status(500).json({
+      status: 'error',
+      message: (err.message)
+    });
     throw new Error(err.message);
   }
 
@@ -172,6 +188,10 @@ exports.deleteGroup = async (req, res, next) => {
     });
 
   } catch (err) {
+    res.status(500).json({
+      status: 'error',
+      message: (err.message)
+    });
     throw new Error(err.message);
   }
 };
