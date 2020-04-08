@@ -20,10 +20,12 @@ router
   .get(userController.getUser)
   .patch(userController.updateUser)
   .delete(userController.deleteUser);
-// router.put('/update/:name', userController.updateStatus);
-// router.put('/joingroup/:name', userController.joinGroup);
 
 // Group routes
+router
+  .route('/groups')
+  .get(groupController.getAllGroups)
+  .post(groupController.createGroup);
 // router.post('/creategroup', groupController.createGroup);
 // router.get('/groups', groupController.getAllGroup);
 

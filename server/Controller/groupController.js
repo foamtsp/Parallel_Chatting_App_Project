@@ -29,11 +29,11 @@ exports.getAllGroups = async (req, res, next) => {
 exports.createGroup = async (req, res, next) => {
   try {
     const {
-      name,
+      userId,
       groupName
     } = req.body;
 
-    if (!name) {
+    if (!userId) {
       res.status(400).json({
         status: 'fail',
         message: 'A Group must have an founder.',
@@ -41,25 +41,16 @@ exports.createGroup = async (req, res, next) => {
       throw new Error('A Group must have an founder.');
     }
 
-    const user = await User.findOneAndUpdate({
-      name
-    }, {
-      currentGroup: groupName,
-    });
-
-    if (!user) {
-      res.status(404).json({
-        status: 'fail',
-        message: 'Not found this user name.',
-      });
-      throw new Error('Not found this user name.');
-    }
-
     const group = await Group.create({
       groupName,
-      $push: {
-        members: user._id
+      $set: {
+        members: [userId]
       },
+    });
+
+    // Update currentGroup
+    const user = await User.findByIdAndUpdate(userId, {
+      currentGroup: group._id,
     });
 
     res.status(201).json({

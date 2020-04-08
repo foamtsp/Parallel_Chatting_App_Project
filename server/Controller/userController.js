@@ -31,11 +31,11 @@ exports.isSignedup = async (req, res, next) => {
     });
 
     if (!user) {
-      next();
+      return next();
     };
     user.active = true;
 
-    console.log(`Existing user, already logged in.`);
+    console.log(`Existing user, already logged in with id "${user._id}."`);
     res.status(200).json({
       status: 'success',
       data: user
@@ -54,7 +54,7 @@ exports.createUser = async (req, res, next) => {
   try {
     const user = await User.create(req.body);
 
-    console.log(`User has been created with id ${user._id}.`);
+    console.log(`User has been created with id "${user._id}."`);
 
     res.status(201).json({
       status: 'success',
