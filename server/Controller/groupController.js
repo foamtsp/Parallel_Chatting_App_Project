@@ -1,4 +1,4 @@
-const ObjectId = require('mongoose').Types.ObjectId
+// const ObjectId = require('mongoose').Types.ObjectId
 const Group = require('../models/groupModel');
 const User = require('../models/userModel');
 const UserRecord = require('../models/userRecordModel');
@@ -55,7 +55,7 @@ exports.createGroup = async (req, res, next) => {
 
     const group = await Group.create({
       groupName,
-      members: [ObjectId(userId)],
+      members: [userId]
     });
 
     // Update currentGroup
@@ -166,14 +166,14 @@ exports.deleteGroup = async (req, res, next) => {
     // Delete all messages in group (Create local function
     const messages = currentGroup.messages;
     const messagePromises = messages.map(id => {
-      Message.findByIdAndRemove(id);
+      return Message.findByIdAndRemove(id);
     });
     await Promise.all(messagePromises);
 
     // Delete currentGroup with this groupName userModel (Create local function)
     const members = currentGroup.members;
     const memberPromises = members.map(id => {
-      User.findByIdAndUpdate(id, {
+      return User.findByIdAndUpdate(id, {
         currentGroup: null
       }, {
         new: true
