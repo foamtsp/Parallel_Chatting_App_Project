@@ -32,7 +32,11 @@ const CreateJobModal = ({ name }) => {
     }
     else{
 
-        var sending_data = {name,groupname}
+        var sending_data = {
+          name:name,
+          groupName:groupname
+        }
+
         fetch("http://localhost:4000/api/groups" , {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
