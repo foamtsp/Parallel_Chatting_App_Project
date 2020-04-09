@@ -230,14 +230,16 @@ exports.joinGroup = async (req, res, next) => {
         status: 'fail',
         message: 'This group name dose not exists.',
       });
+      throw new Error('This group name dose not exists.');
     }
 
     const user = await User.findOneAndUpdate({
       name,
     }, {
-      currentGroup: group._id,
+      currentGroup: group._id
     }, {
-      new: true
+      new: true,
+      runValidators: true
     });
 
     // push user id in members array
@@ -245,11 +247,9 @@ exports.joinGroup = async (req, res, next) => {
     await Group.findOneAndUpdate({
       groupName,
     }, {
-      $push: {
-        members: user._id,
-      },
-    }, {
-      new: true
+      $addToSet: {
+        members: user._id
+      }
     });
 
     res.status(200).json({
@@ -269,17 +269,20 @@ exports.joinGroup = async (req, res, next) => {
 exports.leaveGroup = async (req, res, next) => {
   try {
     const name = req.params.name;
-
     const {
       groupName
     } = req.body;
+
+    const currentUser = await User.findOne({
+      name
+    });
 
     // pull user from group member
     const currentGroup = await Group.findOneAndUpdate({
       groupName,
     }, {
       $pull: {
-        members: name,
+        members: currentUser._id,
       },
     });
 
@@ -287,6 +290,7 @@ exports.leaveGroup = async (req, res, next) => {
     const record = await UserRecord.create({
       name,
       group: currentGroup._id,
+      leaveTimestamp: Date.now(),
     });
 
     // push record to user and populate to output
@@ -298,7 +302,8 @@ exports.leaveGroup = async (req, res, next) => {
         userRecords: record._id,
       },
     }, {
-      new: true
+      new: true,
+      runValidators: true
     }).populate({
       path: 'userRecords',
       select: '-name',

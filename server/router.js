@@ -12,17 +12,14 @@ router
   .post(userController.isSignedup, userController.createUser);
 
 router.get('/users/:name/logout', userController.logout);
-// router.post('/users/:name/joingroup', userController.joinGroup);
-// router.post('/users/:name/leavegroup', userController.leaveGroup);
+router.post('/users/:name/joingroup', userController.joinGroup);
+router.post('/users/:name/leavegroup', userController.leaveGroup);
 
 router
   .route('/users/:name')
   .get(userController.getUser)
   .patch(userController.updateUser)
   .delete(userController.deleteUser);
-
-// router.get('/users/:name/join', userController.joinGroup);
-// router.get('/users/:name/:groupName/leave', userController.leaveGroup);
 
 // Group routes
 router
