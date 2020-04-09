@@ -150,7 +150,19 @@ exports.deleteUser = async (req, res, next) => {
       throw new Error('No user found with that name');
     }
 
-    res.status(204);
+    // Delete user id in group
+    await Group.updateMany({}, {
+      $pull: {
+        members: user._id
+      }
+    });
+
+    // Delete userRecord
+    await UserRecord.deleteMany({
+      name
+    });
+
+    res.status(204).json();
   } catch (err) {
     res.status(500).json({
       status: 'error',
@@ -165,14 +177,29 @@ exports.logout = async (req, res, next) => {
   try {
     const name = req.params.name;
 
-    await User.findOneAndUpdate({
+    const user = await User.findOneAndUpdate({
       name,
     }, {
       active: false,
       loggedoutAt: Date.now(),
+      currentGroup: null
     }, {
       new: true
     });
+
+    if (!user) {
+      res.status(400).json({
+        status: 'fail',
+        message: 'Not found a user with that name'
+      })
+    };
+
+    // Delete member group
+    await Group.updateMany({}, {
+      $pull: {
+        members: user._id
+      }
+    })
 
     res.status(200).json({
       status: 'success',

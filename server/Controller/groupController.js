@@ -163,12 +163,24 @@ exports.deleteGroup = async (req, res, next) => {
       throw new Error('Not found a group with that name.');
     };
 
-    // Delete all messages in group (Create local function
+    // Delete all messages in group
     const messages = currentGroup.messages;
     const messagePromises = messages.map(id => {
-      return Message.findByIdAndRemove(id);
+      return Message.deleteMany({
+        _id: id
+      });
     });
     await Promise.all(messagePromises);
+
+    // Delete all messages in user
+    const userMessagePromises = messages.map(id => {
+      return User.updateMany({}, {
+        $pull: {
+          messages: id
+        }
+      });
+    });
+    await Promise.all(userMessagePromises);
 
     // Delete currentGroup with this groupName userModel (Create local function)
     const members = currentGroup.members;

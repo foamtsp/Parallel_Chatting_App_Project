@@ -2,8 +2,7 @@ const mongoose = require('mongoose');
 
 const messageSchema = new mongoose.Schema({
   author: {
-    type: mongoose.Schema.ObjectId,
-    ref: 'User',
+    type: String,
     required: [true, 'Messages must have an author.'],
   },
   group: {

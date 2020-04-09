@@ -21,6 +21,9 @@ router
   .patch(userController.updateUser)
   .delete(userController.deleteUser);
 
+// router.get('/users/:name/join', userController.joinGroup);
+// router.get('/users/:name/:groupName/leave', userController.leaveGroup);
+
 // Group routes
 router
   .route('/groups')
@@ -35,5 +38,17 @@ router
 
 
 // Message routes
+router.get('/messages', messageController.getAllMessages);
+router
+  .route('/messages/:id')
+  .get(messageController.getMessage)
+  .patch(messageController.editMessage)
+  .delete(messageController.deleteMessage);
+
+router
+  .route('/groups/:name/message')
+  .post(messageController.sendMessage)
+  .get(messageController.getAllGroupMessages)
+  .delete(messageController.deleteAllGroupMessages);
 
 module.exports = router;
