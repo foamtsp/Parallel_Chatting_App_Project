@@ -4,9 +4,13 @@
   table-layout: fixed; /*Optional*/
 }
 .Column {
-  display: table-cell;
+  display: inline-flex;
 }
 
 .GroupContainer{
   padding-top: 25px;
+}
+
+.welcome{
+  text-align: center;
 }

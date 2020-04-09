@@ -19,9 +19,9 @@
 .groupcontainer {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: start;
   background: rgb(116, 166, 241);
-  border-radius: 8px;
+  border-radius: 0px;
   height: 100%;
   width: 25%;
 }

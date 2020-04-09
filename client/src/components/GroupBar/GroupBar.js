@@ -12,9 +12,9 @@ const GroupBar = ({ name }) => {
 
   return (
         <div>
-          <h1>Welcome {name}</h1>
+          <h1 className = "welcome">Welcome {name}</h1>
           <div className="Row">
-            <div className="Cloumn">
+            <div className="Column">
                 <input placeholder="Find Group"/>
             </div>
             <div className="Column">
