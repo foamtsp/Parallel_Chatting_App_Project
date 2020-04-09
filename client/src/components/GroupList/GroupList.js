@@ -9,13 +9,14 @@ const onCreateGroup = (name,group) => {
 
 const renderList = (name,listing) => {
     return (
-      listing.map((group) => {
+      listing.map((group) => {// Create if(name in group['member'])
         return (
 
             <div>
               <li onClick={()=>onCreateGroup(name,group)}>
-                {group}
+                {group['groupName']}
                 {/* <button>Join</button> */}
+                {console.log(group['members'])}
               </li>
             </div>
         )
@@ -34,7 +35,7 @@ const GroupList = ({ name }) => {
 
     var groupList = apiCall2.data;
     for(var x in groupList){
-      list.push(groupList[x]['groupName'])
+      list.push(groupList[x])
     }
     setGroupNames(list);
   }
