@@ -1,46 +1,42 @@
-import React, { Component } from 'react';
+import React, { useState,Component } from 'react';
 import Modal from 'react-modal';
 import './CreateJobModal.css';
 
 
-const customStyles = {
-  content: {
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
-    justifyContent: 'center',
-  }
-};
 
 
 
-class CreateJobModal extends Component {
 
-  constructor(props) {
-    super(props);
+const CreateJobModal = ({ name }) => {
 
-    this.state = {
-      modalIsOpen: false
-    };
-    this.openModal = this.openModal.bind(this);
-    this.closeModal = this.closeModal.bind(this);
-    this.onCreateGroup = this.onCreateGroup.bind(this);
+  const [modalIsOpen, setmodalIsOpen] = useState('');
 
-  }
+  const customStyles = {
+    content: {
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+      justifyContent: 'center',
+    }
+  };
+  
 
-  onCreateGroup(){
-    var name = document.getElementById('groupname').value
-    name = name.trim()
-    if(name.length == 0){
+  const onCreateGroup = (name) =>{
+    var groupname = document.getElementById('groupname').value
+    groupname = groupname.trim()
+    if(groupname.length == 0){
         alert('Please Fill Group Name')
     }
     else{
-        fetch("/group/" + name, {
+
+        var sending_data = {name,groupname}
+        fetch("http://localhost:4000/api/groups" , {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(sending_data)
         })
         .then(function (response) {
             if (response.status >= 400) {
@@ -55,42 +51,44 @@ class CreateJobModal extends Component {
 
   
 
-  openModal() {
-    this.setState({ modalIsOpen: true });
+  const openModal = async () => {
+    await setmodalIsOpen(true);
+  }
+  // useEffect(() => {
+  //   fetchGroupName();
+  // },[]);
+
+
+  const closeModal = async () => {
+    await setmodalIsOpen(false);
   }
 
 
 
-  closeModal() {
-    this.setState({ modalIsOpen: false });
-  }
-
-
-
-  render() {
+  
 
     return (
+      
       <div style={{ display: 'flex', justifyContent: 'center' }}>
-       
-        <button onClick={this.openModal}>+</button>
+        <button onClick={openModal}>+</button>
         <Modal
-          isOpen={this.state.modalIsOpen}
-          onAfterOpen={this.afterOpenModal}
-          onRequestClose={this.closeModal}
+          isOpen={modalIsOpen}
+          // onAfterOpen={afterOpenModal()}
+          onRequestClose={()=>closeModal()}
           style={customStyles}
           contentLabel="Example Modal"
         >
         <div>
             <h2>Group Name</h2>
             <input placeholder="Fill Group Name" id="groupname"/>
-            <button onClick={()=>this.onCreateGroup()}>Create Group</button>
+            <button onClick={()=>onCreateGroup(name)}>Create Group</button>
         </div>    
 
         </Modal>
       </div>
     )
 
-  }
+  
 
 
 }

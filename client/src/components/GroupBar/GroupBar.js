@@ -18,7 +18,7 @@ const GroupBar = ({ name }) => {
                 <input placeholder="Find Group"/>
             </div>
             <div className="Column">
-                <CreateJobModal className="Column"/>
+                <CreateJobModal className="Column" name={name}/>
             </div>
           </div>
           <div className="GroupContainer">
