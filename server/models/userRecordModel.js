@@ -19,13 +19,13 @@ userRecordSchema.index({
   name: 1
 });
 
-// userRecordSchema.pre(/^find/, function (next) {
-//   this.populate({
-//     path: 'group',
-//     select: 'groupName',
-//   });
-//   next();
-// });
+userRecordSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'group',
+    select: 'groupName',
+  });
+  next();
+});
 
 const UserRecord = mongoose.model('UserRecord', userRecordSchema);
 
