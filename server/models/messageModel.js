@@ -27,7 +27,7 @@ messageSchema.index({
   group: 1
 });
 
-// messageSchema.pre(/^find/, function (next) {
+// messageSchema.pre(/^create/, function (next) {
 //   this.populate({
 //     path: 'group',
 //     select: 'groupName',

@@ -20,9 +20,9 @@ exports.sendMessage = async (req, res, next) => {
     if (!user) {
       res.status(400).json({
         status: 'fail',
-        message: 'This user ID is not correct.'
+        message: 'This user name is not correct.'
       });
-      throw new Error('This user ID is not correct.');
+      throw new Error('This user name is not correct.');
     };
 
     // Check this group exists
@@ -38,7 +38,7 @@ exports.sendMessage = async (req, res, next) => {
       throw new Error('Not Found this group with that group name.');
     }
 
-    const newMessage = await Message.create({
+    let newMessage = await Message.create({
       author: user.name,
       group: group._id,
       text: message,
@@ -46,7 +46,7 @@ exports.sendMessage = async (req, res, next) => {
 
     // Add message id to user
     await User.findByIdAndUpdate({
-      _id: userId,
+      _id: user._id,
       currentGroup: groupName
     }, {
       $push: {
@@ -62,6 +62,11 @@ exports.sendMessage = async (req, res, next) => {
         messages: newMessage._id,
       },
     });
+
+    newMessage = await newMessage.populate({
+      path: 'group',
+      select: 'groupName'
+    }).execPopulate();
 
     res.status(201).json({
       status: 'success',
