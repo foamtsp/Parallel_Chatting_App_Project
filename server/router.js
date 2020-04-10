@@ -14,6 +14,7 @@ router
 router.get('/users/:name/logout', userController.logout);
 router.post('/users/:name/joingroup', userController.joinGroup);
 router.post('/users/:name/leavegroup', userController.leaveGroup);
+router.post('/users/:name/exitgroup', userController.exitGroup);
 
 router
   .route('/users/:name')

@@ -16,8 +16,7 @@ const userRecordSchema = new mongoose.Schema({
 });
 
 userRecordSchema.index({
-  name: 1,
-  leaveTimestamp: -1
+  name: 1
 });
 
 userRecordSchema.pre(/^find/, function (next) {
