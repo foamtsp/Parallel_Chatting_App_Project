@@ -13,7 +13,7 @@ const renderList = (name,listing) => {
         return (
 
             <div>
-              <li onClick={()=>onCreateGroup(name,group)}>
+              <li onClick={()=>onCreateGroup(name,group['groupName'])}>
                 {group['groupName']}
                 {/* <button>Join</button> */}
               </li>
