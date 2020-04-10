@@ -37,6 +37,7 @@ const Chat = ({ location }) => {
   
   useEffect(() => {
     socket.on('message', message => {
+      console.log(message)
       setMessages(messages => [ ...messages, message ]);
     });
     
@@ -48,8 +49,10 @@ const Chat = ({ location }) => {
   const sendMessage = (event) => {
     event.preventDefault();
 
+    const msg = {text:message, timestamp: new Date()};
+
     if(message) {
-      socket.emit('sendMessage', message, () => setMessage(''));
+      socket.emit('sendMessage', msg, () => setMessage(''));
     }
   }
 
@@ -74,7 +77,6 @@ const Chat = ({ location }) => {
             <GroupBar name={name}/>
       </div>
       <div className="container">
-          {console.log(room)}
           <InfoBar room={room} />
           <Messages messages={messages} name={name} />
           <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
