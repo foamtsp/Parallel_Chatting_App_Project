@@ -8,11 +8,7 @@ const cors = require('cors');
 const router = require('./router');
 // const { addUser, removeUser, getUser, getUsersInRoom } = require('./users');
 const Group = require('./models/groupModel')
-const Message = require('./models/messageModel')
-const User = require('./models/userModel')
-const UserRecord = require('./models/userRecordModel')
-const GroupController = require('./Controller/groupController')
-const UserController = require('./Controller/userController')
+const SocketController = require('./Controller/socketController')
 
 dotenv.config({
   path: './config.env',
@@ -75,28 +71,15 @@ io.on('connection', (socket) => {
     //   room,
     // });
 
+    const groupName = room
     // join to db
-    const groupName = room;
-    const group = await Group.findOne({
-      groupName,
-    });
-
-    const user = await User.findOneAndUpdate({
-      name,
-    }, {
-      currentGroup: group._id
-    }, {
-      new: true,
-      runValidators: true
-    });
-
-    await Group.findOneAndUpdate({
-      groupName,
-    }, {
-      $addToSet: {
-        members: user._id
-      }
-    });
+    try {
+      SocketController.joinGroup(name, groupName)
+      console.log(name+ " join the chat")
+    } catch (error) {
+      console.log(error)
+    }
+    
 
     //get unread message if user existed
 
@@ -111,6 +94,10 @@ io.on('connection', (socket) => {
     socket.broadcast.to(groupName).emit('message', {
       user: 'admin',
       text: `${name} has joined!`,
+    });
+
+    const group = await Group.findOne({
+      groupName,
     });
 
     io.to(groupName).emit('roomData', {
@@ -128,35 +115,13 @@ io.on('connection', (socket) => {
 
       //save message to db
       //your code here
-      let newMessage = await Message.create({
-        author: user.name,
-        group: group._id,
-        text: message.text,
-      });
-
-      // Add message id to user
-      await User.findByIdAndUpdate({
-        _id: user._id,
-        currentGroup: groupName
-      }, {
-        $push: {
-          messages: newMessage._id
-        }
-      });
-
-      // Add message id to the group
-      await Group.findOneAndUpdate({
-        groupName,
-      }, {
-        $push: {
-          messages: newMessage._id,
-        },
-      });
-
-      newMessage = await newMessage.populate({
-        path: 'group',
-        select: 'groupName'
-      }).execPopulate();
+      try {
+        SocketController.sendMessage(name, groupName, message.text)
+        console.log(name+ " send message "+ message.text)
+      } catch (error) {
+        
+      }
+      
 
       callback();
     });
