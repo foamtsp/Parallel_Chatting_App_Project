@@ -12,7 +12,12 @@ const GroupBar = ({ name }) => {
 
   return (
         <div>
-          <h1 className = "welcome">Welcome {name}</h1>
+          <div className="Row">
+            <h2 className = "welcome">Welcome {name}</h2>
+            <button className='logoutBtn'>
+            <a className = "logout" href="/">Logout</a>
+            </button>
+          </div>
           <div className="Row">
             <div className="Column">
                 <input className="GroupInput" placeholder="Find Group"/>
