@@ -8,13 +8,13 @@ exports.sendMessage = async (req, res, next) => {
     // Create message to messageModel
     const groupName = req.params.name;
     const {
-      userId,
+      name,
       message
     } = req.body;
 
     // Check existing user
     const user = await User.findOne({
-      _id: userId
+      name
     });
 
     if (!user) {
