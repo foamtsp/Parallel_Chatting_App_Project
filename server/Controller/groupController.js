@@ -7,7 +7,13 @@ const Message = require('../models/messageModel');
 // Get all group
 exports.getAllGroups = async (req, res, next) => {
   try {
-    const groups = await Group.find();
+    const groups = await Group.find().populate({
+      path: 'members',
+      populate: {
+        path: 'members'
+      },
+      select: '-__v -messages -userRecords'
+    });
 
     res.status(200).json({
       status: 'success',
@@ -57,10 +63,18 @@ exports.createGroup = async (req, res, next) => {
       throw new Error('Please log in and get valid userId.');
     };
 
-    const group = await Group.create({
+    let group = await Group.create({
       groupName,
       members: [user._id]
     });
+
+    group = await group.populate({
+      path: 'members',
+      populate: {
+        path: 'members'
+      },
+      select: '-userRecords -currentGroup -messages -active -__v'
+    }).execPopulate();
 
     // Update currentGroup
     await User.findByIdAndUpdate(user._id, {
@@ -87,6 +101,18 @@ exports.getGroup = async (req, res, next) => {
 
     const group = await Group.findOne({
       groupName: name
+    }).populate({
+      path: 'messages',
+      populate: {
+        path: 'messages'
+      },
+      select: '-__v -group'
+    }).populate({
+      path: 'members',
+      populate: {
+        path: 'members'
+      },
+      select: '-messages -__v -currentGroup -userRecords -active'
     });
 
     if (!group) {
