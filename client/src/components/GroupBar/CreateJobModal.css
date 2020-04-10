@@ -2,7 +2,35 @@
     display: table;
     width: 10%; /*Optional*/
     table-layout: fixed; /*Optional*/
-  }
-  .Column {
+}
+.Column {
     display: table-cell;
-  }
+}
+
+
+.btn {
+  background-color:#44c767;
+	border-radius:28px;
+	border:1px solid #18ab29;
+  display:flex;
+  justify-content: center;
+	cursor:pointer;
+	color:#ffffff;
+	font-size:1rem;
+  margin: 12px 0px;
+	text-decoration:none;
+}
+
+.btn:hover {
+	background-color:#5cbf2a;
+}
+.btn:active {
+	position:relative;
+	top:1px;
+}
+
+.NewGroupInput{
+  display: flex;
+  font-size: 1rem;
+  padding: 5px 1px 5px 1px;
+}

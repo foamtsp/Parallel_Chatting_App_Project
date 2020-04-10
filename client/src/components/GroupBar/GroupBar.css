@@ -1,10 +1,22 @@
 .Row {
-  display: table;
+  display: inline-flex;
   width: 100%; /*Optional*/
-  table-layout: fixed; /*Optional*/
+  /* table-layout: fixed; Optional */
 }
 .Column {
-  display: inline-flex;
+  display: flex;
+  flex-grow: 2;
+}
+
+.GroupInput{
+  display: flex;
+  flex-grow: 2;
+  font-size: 1.1rem;
+  padding: 5px 1px 5px 1px;
+}
+
+.NewGroup {
+  flex-grow: 0;
 }
 
 .GroupContainer{

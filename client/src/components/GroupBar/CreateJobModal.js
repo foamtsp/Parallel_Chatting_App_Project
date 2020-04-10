@@ -17,10 +17,12 @@ const CreateJobModal = ({ name }) => {
       left: '50%',
       right: 'auto',
       bottom: 'auto',
-      marginRight: '-50%',
+      marginRight: '0%',
       transform: 'translate(-50%, -50%)',
       justifyContent: 'center',
+      borderRadius:'28px'
     }
+
   };
   
 
@@ -84,8 +86,8 @@ const CreateJobModal = ({ name }) => {
         >
         <div>
             <h2>Group Name</h2>
-            <input placeholder="Fill Group Name" id="groupname"/>
-            <button onClick={()=>onCreateGroup(name)}>Create Group</button>
+            <input className = "NewGroupInput" placeholder="Fill Group Name" id="groupname"/>
+            <button className = "btn" onClick={()=>onCreateGroup(name)}>Create Group</button>
         </div>    
 
         </Modal>
