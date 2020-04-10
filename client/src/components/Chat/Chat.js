@@ -64,6 +64,8 @@ const sendMessage = (event) => {
 }
 
 const fetchOldMessage = async (groupname) => {
+
+  if (groupname === "default") return;
   
   let messages = [];
 
@@ -87,21 +89,29 @@ const fetchOldMessage = async (groupname) => {
 }
 
 const onSendMessage = (name,text,current_date,groupname) =>{
- 
-  let timer = null;
+
 
   var sending_data = {
     name:name,
     time_stamp:current_date,
+<<<<<<< HEAD
+    message:text,
+||||||| merged common ancestors
+    messages:text,
+
+=======
     message:text,
 
+>>>>>>> b91e5a5fc91a59c6b74de8c2fe7cfd107148120a
   }
 
-  fetch("http://localhost:4000/api/groups/"+groupname+"/message" , {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(sending_data)
-  })
+  console.log(sending_data)
+
+  // fetch("http://localhost:4000/api/groups/"+groupname+"/message" , {
+  //     method: 'POST',
+  //     headers: { 'Content-Type': 'application/json' },
+  //     body: JSON.stringify(sending_data)
+  // })
 }
 
   
