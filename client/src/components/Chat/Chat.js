@@ -18,6 +18,7 @@ const Chat = ({ location }) => {
   const [users, setUsers] = useState('');
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
+  const [oldmessages, setOldMessages] = useState([]);
   const ENDPOINT = 'localhost:4000';
 
   useEffect(() => {
@@ -52,10 +53,13 @@ const sendMessage = (event) => {
   var current_date = new Date();
   current_date = current_date.toLocaleString();
 
+  const msg = {text:message, timestamp: new Date()};
+
   if(message) {
-    socket.emit('sendMessage', message, current_date, () => setMessage(''));
+    socket.emit('sendMessage', msg, () => setMessage(''));
     onSendMessage(name,message,current_date,room)
   }
+  
 }
 
 const onSendMessage = (name,text,current_date,groupname) =>{
