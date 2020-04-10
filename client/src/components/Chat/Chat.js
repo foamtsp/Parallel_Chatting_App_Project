@@ -93,7 +93,7 @@ const onSendMessage = (name,text,current_date,groupname) =>{
   var sending_data = {
     name:name,
     time_stamp:current_date,
-    messages:text,
+    message:text,
 
   }
 
