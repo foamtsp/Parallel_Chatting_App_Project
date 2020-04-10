@@ -1,6 +1,45 @@
 const Message = require('../models/messageModel');
 const Group = require('../models/groupModel');
 const User = require('../models/userModel');
+const UserRecord = require('../models/userRecordModel');
+
+// Local function
+exports.getUnreadMessages = async (record, groupName, res) => {
+  try {
+    const group = await Group.findOne({
+      groupName,
+    }).populate({
+      path: 'messages',
+      populate: {
+        path: 'messages'
+      },
+      select: '-__v -group'
+    });
+
+    const allMessages = group.messages;
+    let readMessages = [];
+    let unreadMessages = [];
+
+    allMessages.forEach(message => {
+      if (message.createdAt < record.leaveTimestamp) {
+        readMessages.push(message._id);
+      } else {
+        unreadMessages.push(message._id);
+      }
+    });
+
+    return [
+      readMessages,
+      unreadMessages
+    ]
+  } catch (err) {
+    res.status(500).json({
+      status: 'error',
+      message: err.message
+    })
+    throw new Error(err.message);
+  }
+};
 
 // Ex: req.body = { user: '<USER ID>', message: 'Hello' }
 exports.sendMessage = async (req, res, next) => {
@@ -37,6 +76,16 @@ exports.sendMessage = async (req, res, next) => {
       });
       throw new Error('Not Found this group with that group name.');
     }
+
+    /*
+    if (!user.currentGroup || user.currentGroup.groupName !== groupName) {
+      res.status(400).json({
+        status: 'fail',
+        message: 'This user not in this group.',
+      });
+      throw new Error('This user not in this group.');
+    };
+    */
 
     let newMessage = await Message.create({
       author: user.name,

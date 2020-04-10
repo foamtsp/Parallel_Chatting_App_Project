@@ -13,6 +13,14 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: 'Message'
   }],
+  readMessages: [{
+    type: mongoose.Schema.ObjectId,
+    ref: 'Message'
+  }],
+  unreadMessages: [{
+    type: mongoose.Schema.ObjectId,
+    ref: 'Message'
+  }],
   currentGroup: {
     type: mongoose.Schema.ObjectId,
     ref: 'Group'
