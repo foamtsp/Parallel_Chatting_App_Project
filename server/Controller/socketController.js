@@ -1,6 +1,7 @@
 const Group = require('../models/groupModel')
 const Message = require('../models/messageModel')
 const User = require('../models/userModel')
+const UserRecord = require('../models/userRecordModel');
 
 exports.joinGroup = async (name, groupName) => {
     try {
@@ -80,6 +81,55 @@ exports.sendMessage = async (name, groupName, message) => {
             path: 'group',
             select: 'groupName'
         }).execPopulate();
+
+    } catch (err) {
+        throw new Error(err.message);
+    }
+};
+
+exports.leaveGroup = async (name, groupName) => {
+    try {
+
+        const currentUser = await User.findOne({
+            name
+        });
+
+        if (!currentUser.currentGroup) {
+            throw new Error('This user already not in any group.');
+        };
+
+        // pull user from group member
+        const currentGroup = await Group.findOneAndUpdate({
+            groupName,
+        }, {
+            $pull: {
+                members: currentUser._id,
+            },
+        });
+
+        // save leaveTimeStamp by create default
+        const record = await UserRecord.create({
+            name,
+            group: currentGroup._id,
+            leaveTimestamp: Date.now(),
+        });
+
+        // push record to user and populate to output
+        const user = await User.findOneAndUpdate({
+            name,
+        }, {
+            currentGroup: null,
+            $push: {
+                userRecords: record._id,
+            },
+        }, {
+            new: true,
+            runValidators: true
+        }).populate({
+            path: 'userRecords',
+            select: '-name',
+            model: 'UserRecord',
+        });
 
     } catch (err) {
         throw new Error(err.message);

@@ -75,11 +75,11 @@ io.on('connection', (socket) => {
     // join to db
     try {
       SocketController.joinGroup(name, groupName)
-      console.log(name+ " join the chat")
+      console.log(name + " join the chat")
     } catch (error) {
       console.log(error)
     }
-    
+
 
     //get unread message if user existed
 
@@ -117,36 +117,36 @@ io.on('connection', (socket) => {
       //your code here
       try {
         SocketController.sendMessage(name, groupName, message.text)
-        console.log(name+ " send message "+ message.text)
+        console.log(name + " send message " + message.text)
       } catch (error) {
-        
+
       }
-      
+
 
       callback();
+    });
+
+    socket.on('disconnect', () => {
+
+      //save to user's timestamp logout
+      //your code here
+      SocketController.leaveGroup(name, groupName)
+      io.to(groupName).emit('message', {
+        user: 'Admin',
+        text: `${name} has left.`,
+      });
+      io.to(groupName).emit('roomData', {
+        room: groupName,
+        users: group.members,
+      });
+      console.log("disconnect")
     });
 
     callback();
   });
 
 
-  // socket.on('disconnect', () => {
-  //   const user = removeUser(socket.id);
-
-  //   //save to user's timestamp logout
-  //   //your code here
-
-  //   if (user) {
-  //     io.to(user.room).emit('message', {
-  //       user: 'Admin',
-  //       text: `${user.name} has left.`,
-  //     });
-  //     io.to(user.room).emit('roomData', {
-  //       room: user.room,
-  //       users: getUsersInRoom(user.room),
-  //     });
-  //   }
-  // });
+ 
 });
 
 server.listen(SERVER_PORT, () => {
