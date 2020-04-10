@@ -25,4 +25,23 @@
 
 .welcome{
   text-align: center;
+  color: white;
+  padding-left: 5px;
+}
+
+.logoutBtn{
+  display:flex;
+  border-radius: 10px;
+  margin: 19.92px 7px;
+  background-color:red;
+  display:flex;
+  justify-content: center;
+	cursor:pointer;
+	text-decoration:none;
+}
+
+.logout{
+  color:#ffffff;
+  font-size:1rem;
+  text-decoration:none;
 }
