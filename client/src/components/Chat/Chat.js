@@ -18,6 +18,7 @@ const Chat = ({ location }) => {
   const [users, setUsers] = useState('');
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
+  const [oldmessages, setOldMessages] = useState([]);
   const ENDPOINT = 'localhost:4000';
 
   useEffect(() => {
@@ -33,6 +34,7 @@ const Chat = ({ location }) => {
         alert(error);
       }
     });
+    fetchOldMessage(room);
   }, [ENDPOINT, location.search]);
   
   useEffect(() => {
@@ -46,15 +48,52 @@ const Chat = ({ location }) => {
     });
 }, []);
 
-  const sendMessage = (event) => {
-    event.preventDefault();
 
-    const msg = {text:message, timestamp: new Date()};
+const sendMessage = (event) => {
+  event.preventDefault();
+  var current_date = new Date();
+  current_date = current_date.toLocaleString();
 
-    if(message) {
-      socket.emit('sendMessage', msg, () => setMessage(''));
-    }
+  const msg = {text:message, timestamp: new Date()};
+
+  if(message) {
+    socket.emit('sendMessage', msg, () => setMessage(''));
+    onSendMessage(name,message,current_date,room)
   }
+  
+}
+
+const fetchOldMessage = async (groupname) => {
+  var list = [];
+  const apiCall = await fetch("http://localhost:4000/api/groups/"+groupname, {method: 'GET',});
+  const apiCall2 = await apiCall.json()
+
+  var groupName = apiCall2.data;
+  console.log(groupName);
+  for(var x in groupName['messages']){
+    console.log(groupName['messages'][x]['text'])
+  }
+}
+
+const onSendMessage = (name,text,current_date,groupname) =>{
+ 
+  let timer = null;
+
+  var sending_data = {
+    name:name,
+    time_stamp:current_date,
+    messages:text,
+
+  }
+
+  fetch("http://localhost:4000/api/groups/"+groupname+"/message" , {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(sending_data)
+  })
+}
+
+  
 
   if(room=="default"){
     return(
@@ -79,7 +118,7 @@ const Chat = ({ location }) => {
       <div className="container">
           <InfoBar room={room} />
           <Messages messages={messages} name={name} />
-          <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
+          <Input message={message} setMessage={setMessage} sendMessage={sendMessage} name={name} groupname={room}/>
       </div>
       {/* <TextContainer users={users}/> */}
     </div>
