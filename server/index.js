@@ -104,6 +104,7 @@ io.on('connection', (socket) => {
 
     socket.join(groupName);
 
+    //เด้งตอนจอยกรุ๊ปครั้งแรก
     socket.emit('message', {
       user: 'admin',
       text: `${name} has joined to the ${groupName} room.`,
