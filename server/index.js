@@ -118,11 +118,12 @@ io.on('connection', (socket) => {
       users: group.members,
     });
 
-    socket.on('sendMessage',async (message, callback) => {
+    socket.on('sendMessage', async (message, callback) => {
       // const user = getUser(socket.id);
       io.to(groupName).emit('message', {
         user: name,
-        text: message,
+        text: message.text,
+        timestamp: message.timestamp
       });
 
       //save message to db
@@ -130,7 +131,7 @@ io.on('connection', (socket) => {
       let newMessage = await Message.create({
         author: user.name,
         group: group._id,
-        text: message,
+        text: message.text,
       });
 
       // Add message id to user
