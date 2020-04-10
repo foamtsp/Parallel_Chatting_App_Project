@@ -48,7 +48,8 @@ exports.sendMessage = async (req, res, next) => {
     const groupName = req.params.name;
     const {
       name,
-      message
+      message,
+      time_stamp
     } = req.body;
 
     // Check existing user
@@ -91,6 +92,7 @@ exports.sendMessage = async (req, res, next) => {
       author: user.name,
       group: group._id,
       text: message,
+      createdAt: time_stamp
     });
 
     // Add message id to user
