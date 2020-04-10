@@ -34,6 +34,7 @@ const Chat = ({ location }) => {
         alert(error);
       }
     });
+    fetchOldMessage(room);
   }, [ENDPOINT, location.search]);
   
   useEffect(() => {
@@ -60,6 +61,18 @@ const sendMessage = (event) => {
     onSendMessage(name,message,current_date,room)
   }
   
+}
+
+const fetchOldMessage = async (groupname) => {
+  var list = [];
+  const apiCall = await fetch("http://localhost:4000/api/groups/"+groupname, {method: 'GET',});
+  const apiCall2 = await apiCall.json()
+
+  var groupName = apiCall2.data;
+  console.log(groupName);
+  for(var x in groupName['messages']){
+    console.log(groupName['messages'][x]['text'])
+  }
 }
 
 const onSendMessage = (name,text,current_date,groupname) =>{
