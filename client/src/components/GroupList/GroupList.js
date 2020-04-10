@@ -16,7 +16,6 @@ const renderList = (name,listing) => {
               <li onClick={()=>onCreateGroup(name,group)}>
                 {group['groupName']}
                 {/* <button>Join</button> */}
-                {console.log(group['members'])}
               </li>
             </div>
         )
@@ -34,6 +33,7 @@ const GroupList = ({ name }) => {
     const apiCall2 = await apiCall.json()
 
     var groupList = apiCall2.data;
+    console.log(groupList);
     for(var x in groupList){
       list.push(groupList[x])
     }
