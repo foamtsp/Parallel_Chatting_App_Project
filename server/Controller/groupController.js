@@ -7,7 +7,13 @@ const Message = require('../models/messageModel');
 // Get all group
 exports.getAllGroups = async (req, res, next) => {
   try {
-    const groups = await Group.find();
+    const groups = await Group.find().populate({
+      path: 'members',
+      populate: {
+        path: 'members'
+      },
+      select: '-__v -messages -userRecords'
+    });
 
     res.status(200).json({
       status: 'success',
