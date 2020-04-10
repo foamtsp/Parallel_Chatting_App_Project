@@ -33,6 +33,7 @@ const CreateJobModal = ({ name }) => {
         alert('Please Fill Group Name')
     }
     else{
+        let timer = null;
 
         var sending_data = {
           name:name,
@@ -50,7 +51,7 @@ const CreateJobModal = ({ name }) => {
             }
             return response.json();
           })
-        .then(window.location.reload(false))
+        .then(timer = setTimeout(() => window.location.reload(false), 500));
     }
     
   }
