@@ -117,7 +117,7 @@ io.on('connection', (socket) => {
       //save message to db
       //your code here
       try {
-        SocketController.sendMessage(name, groupName, message.text)
+        SocketController.sendMessage(name, groupName, message.text, message.timestamp)
         console.log(name + " send message " + message.text)
       } catch (error) {
 

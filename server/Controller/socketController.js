@@ -33,7 +33,7 @@ exports.joinGroup = async (name, groupName) => {
     }
 };
 
-exports.sendMessage = async (name, groupName, message) => {
+exports.sendMessage = async (name, groupName, message, time) => {
     try {
         // Check existing user
         const user = await User.findOne({
@@ -56,6 +56,7 @@ exports.sendMessage = async (name, groupName, message) => {
             author: user.name,
             group: group._id,
             text: message,
+            time_stamp:time
         });
 
         // Add message id to user
