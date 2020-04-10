@@ -5,6 +5,7 @@ import './Join.css';
 
 export default function SignIn() {
   const [name, setName] = useState('');
+  const [isLogin, setIsLogin] = useState('')
 
   const onLogin= (name) =>{
 
@@ -26,7 +27,12 @@ export default function SignIn() {
             }
             return response.json();
           })
-        .then(timer = setTimeout(() => window.location.reload(false), 500));
+        .then( 
+            window.location.href = "/chat?name="+name+'&room=default'
+        )
+        .then(
+            timer = setTimeout(() => window.location.reload(false), 500)
+        );
     
     
   }
@@ -36,10 +42,10 @@ export default function SignIn() {
       <div className="joinInnerContainer">
         <h1 className="heading">Join</h1>
         <div>
-          <input placeholder="Name" className="joinInput" type="text" onChange={(event) => setName(event.target.value)} />
+          <input placeholder="Name" className="joinInput" type="text" onChange={(event) => setName(event.target.value)} onKeyPress={(event)=>event.key === 'Enter'? onLogin(name):event.preventDefault()}/>
         </div>
        
-        <Link onClick={e => (!name) ? e.preventDefault() : null} to={`/chat?name=${name}&room=default`}>
+        <Link onClick={e => (!name) ? e.preventDefault() : null}>
           <button className={'button mt-20'} onClick={()=>onLogin(name)} type="submit">Sign In</button>
         </Link>
       </div>
