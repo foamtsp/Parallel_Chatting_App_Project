@@ -2,6 +2,7 @@ const express = require('express');
 const userController = require('./Controller/userController');
 const groupController = require('./Controller/groupController');
 const messageController = require('./Controller/messageController');
+const userRecordController = require('./Controller/userRecordController');
 
 const router = express.Router();
 
@@ -14,6 +15,7 @@ router
 router.get('/users/:name/logout', userController.logout);
 router.post('/users/:name/joingroup', userController.joinGroup);
 router.post('/users/:name/leavegroup', userController.leaveGroup);
+router.post('/users/:name/exitgroup', userController.exitGroup);
 
 router
   .route('/users/:name')
@@ -47,5 +49,14 @@ router
   .post(messageController.sendMessage)
   .get(messageController.getAllGroupMessages)
   .delete(messageController.deleteAllGroupMessages);
+
+// User Records routes
+// FOR TEST
+router
+  .route('/userRecords')
+  .get(userRecordController.getAllUserRecords)
+  .delete(userRecordController.deleteAllUserRecords);
+router.get('/userRecords/:name', userRecordController.getUserRecordByName);
+router.delete('/userRecords/:name', userRecordController.deleteUserRecordByName);
 
 module.exports = router;

@@ -3,11 +3,8 @@ import React from 'react';
 import './Input.css';
 
 
-// const onSendMessage = (name,text) =>{
-//   if(groupname.length == 0){
-//       alert('Please Fill Group Name')
-//   }
-//   else{
+// const onSendMessage = (name,text,groupname) =>{
+ 
 //       let timer = null;
 
 //       var sending_data = {
@@ -15,7 +12,7 @@ import './Input.css';
 //         messages:text
 //       }
 
-//       fetch("http://localhost:4000/api/groups/" , {
+//       fetch("http://localhost:4000/api/groups/"+groupname+"/message" , {
 //           method: 'POST',
 //           headers: { 'Content-Type': 'application/json' },
 //           body: JSON.stringify(sending_data)
@@ -27,12 +24,12 @@ import './Input.css';
 //           return response.json();
 //         })
 //       .then(timer = setTimeout(() => window.location.reload(false), 500));
-//   }
-  
 // }
+//   //onSendMessage(name,message,groupname)
 
 
-const Input = ({ setMessage, sendMessage, message }) => (
+
+const Input = ({ setMessage, sendMessage, message, name, groupname }) => (
   <form className="form">
     <input
       className="input"

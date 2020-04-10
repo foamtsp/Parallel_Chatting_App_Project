@@ -9,7 +9,6 @@ export default function SignIn() {
 
   const onLogin= (name) =>{
 
-    
         let timer = null;
 
         var sending_data = {

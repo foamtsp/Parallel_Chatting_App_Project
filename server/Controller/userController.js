@@ -2,6 +2,10 @@ const User = require('../models/userModel');
 const UserRecord = require('../models/userRecordModel');
 const Group = require('../models/groupModel');
 
+const {
+  getUnreadMessages
+} = require('./messageController');
+
 // Get all users
 exports.getAllUsers = async (req, res, next) => {
   try {
@@ -233,13 +237,37 @@ exports.joinGroup = async (req, res, next) => {
       throw new Error('This group name dose not exists.');
     }
 
+    let record = await UserRecord.find({
+      name
+    });
+
+    let readMessages = [];
+    let unreadMessages = [];
+    if (record.length > 0) {
+      [
+        readMessages,
+        unreadMessages
+      ] = await getUnreadMessages(record[record.length - 1], groupName, res);
+    }
     const user = await User.findOneAndUpdate({
       name,
     }, {
-      currentGroup: group._id
+      currentGroup: group._id,
+      readMessages,
+      unreadMessages
     }, {
       new: true,
       runValidators: true
+    }).populate({
+      path: 'readMessages',
+      populate: {
+        path: 'readMessages'
+      }
+    }).populate({
+      path: 'unreadMessages',
+      populate: {
+        path: 'unreadMessages'
+      }
     });
 
     // push user id in members array
@@ -250,6 +278,9 @@ exports.joinGroup = async (req, res, next) => {
       $addToSet: {
         members: user._id
       }
+    }, {
+      new: true,
+      runValidators: true
     });
 
     res.status(200).json({
@@ -285,37 +316,24 @@ exports.leaveGroup = async (req, res, next) => {
       throw new Error('This user already not in any group.');
     };
 
-    // pull user from group member
-    const currentGroup = await Group.findOneAndUpdate({
-      groupName,
+    // pull user from group
+    await Group.findOneAndUpdate({
+      groupName
     }, {
       $pull: {
-        members: currentUser._id,
-      },
+        members: currentUser._id
+      }
     });
 
-    // save leaveTimeStamp by create default
-    const record = await UserRecord.create({
-      name,
-      group: currentGroup._id,
-      leaveTimestamp: Date.now(),
-    });
 
-    // push record to user and populate to output
     const user = await User.findOneAndUpdate({
-      name,
+      name
     }, {
       currentGroup: null,
-      $push: {
-        userRecords: record._id,
-      },
+      readMessages: [],
+      unreadMessages: []
     }, {
-      new: true,
-      runValidators: true
-    }).populate({
-      path: 'userRecords',
-      select: '-name',
-      model: 'UserRecord',
+      new: true
     });
 
     res.status(200).json({
@@ -330,3 +348,71 @@ exports.leaveGroup = async (req, res, next) => {
     throw new Error(err.message);
   }
 };
+
+// Tempolary exit group and save to userRecords
+exports.exitGroup = async (req, res, next) => {
+  try {
+    const name = req.params.name;
+    const {
+      groupName
+    } = req.body;
+
+    const currentUser = await User.findOne({
+      name
+    });
+
+    const {
+      readMessages,
+      unreadMessages
+    } = currentUser;
+
+    if (!currentUser.currentGroup) {
+      res.status(400).json({
+        status: 'fail',
+        message: 'This user already not in any group.'
+      });
+      throw new Error('This user already not in any group.');
+    };
+
+    const currentGroup = await Group.findOne({
+      groupName,
+    });
+
+    // save leaveTimeStamp by create default
+    const record = await UserRecord.create({
+      name,
+      group: currentGroup._id
+    });
+
+    // push record to user and populate to output
+    const user = await User.findOneAndUpdate({
+      name,
+    }, {
+      currentGroup: null,
+      $push: {
+        userRecords: record._id,
+      },
+      unreadMessages: [],
+      readMessages: [...readMessages, ...unreadMessages]
+    }, {
+      new: true,
+      runValidators: true
+    }).populate({
+      path: 'userRecords',
+      select: '-name',
+      model: 'UserRecord',
+    });
+
+    res.status(200).json({
+      status: 'success',
+      data: user,
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      status: 'error',
+      message: (err.message)
+    });
+    throw new Error(err.message);
+  }
+}
