@@ -94,15 +94,8 @@ const onSendMessage = (name,text,current_date,groupname) =>{
   var sending_data = {
     name:name,
     time_stamp:current_date,
-<<<<<<< HEAD
-    message:text,
-||||||| merged common ancestors
-    messages:text,
-
-=======
     message:text,
 
->>>>>>> b91e5a5fc91a59c6b74de8c2fe7cfd107148120a
   }
 
   console.log(sending_data)

@@ -56,7 +56,7 @@ exports.sendMessage = async (name, groupName, message, time) => {
             author: user.name,
             group: group._id,
             text: message,
-            time_stamp:time
+            createdAt:time
         });
 
         // Add message id to user
