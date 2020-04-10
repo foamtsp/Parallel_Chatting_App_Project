@@ -4,9 +4,11 @@ import './Message.css';
 
 import ReactEmoji from 'react-emoji';
 
-const Message = ({ message: { text, user }, name }) => {
+const Message = ({ message: { text, user, timestamp }, name }) => {
   let isSentByCurrentUser = false;
   let isSentBySystem = false;
+
+  const time = new Date(timestamp).toTimeString().substring(0,5);
 
   const trimmedName = name.trim().toLowerCase();
 
@@ -24,7 +26,7 @@ const Message = ({ message: { text, user }, name }) => {
         <div className="mb-10">
           <p className="messageContainer justifyEnd mb-0">{trimmedName}</p>
           <div className="messageContainer justifyEnd">
-            <p className="sentText pr-10 mb-0">5:18 pm.</p>
+            <p className="sentText pr-10 mb-0">{time}</p>
             <div className="messageBox backgroundBlue">
               <p className="messageText colorWhite">{ReactEmoji.emojify(text)}</p>
             </div>
@@ -46,7 +48,7 @@ const Message = ({ message: { text, user }, name }) => {
               <div className="messageBox backgroundLight">
                 <p className="messageText colorDark">{ReactEmoji.emojify(text)}</p>
               </div>
-              <p className="sentText pl-10 ">5:18 pm.</p>
+              <p className="sentText pl-10 ">{time}</p>
             </div>
           </div>
         )

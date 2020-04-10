@@ -42,10 +42,10 @@ const GroupList = ({ name }) => {
 
   useEffect(() => {
     fetchGroupName();
-  },[]);
+  },[name]);
   
   if(groupnames.length == 0){
-    return(<h3>Loading...</h3>)
+    return(<h3 className = "loading">Loading...</h3>)
   }
   return(
   <ul>{renderList(name,groupnames)}</ul>)
