@@ -64,15 +64,26 @@ const sendMessage = (event) => {
 }
 
 const fetchOldMessage = async (groupname) => {
-  var list = [];
-  const apiCall = await fetch("http://localhost:4000/api/groups/"+groupname, {method: 'GET',});
+  
+  let messages = [];
+
+  const apiCall = await fetch("http://localhost:4000/api/groups/"+groupname+"/message", {method: 'GET',});
   const apiCall2 = await apiCall.json()
 
-  var groupName = apiCall2.data;
-  console.log(groupName);
-  for(var x in groupName['messages']){
-    console.log(groupName['messages'][x]['text'])
-  }
+  var msgs = apiCall2.data;
+
+  console.log(msgs)
+
+  msgs.forEach(msg => {
+    let message = {
+      text:msg.text,
+      user:msg.author,
+      timestamp:msg.createdAt
+    }
+    messages.push(message)
+  });
+
+  setMessages(messages)
 }
 
 const onSendMessage = (name,text,current_date,groupname) =>{
@@ -113,7 +124,7 @@ const onSendMessage = (name,text,current_date,groupname) =>{
     
     <div className="outerContainer">
       <div className="groupcontainer">
-            <GroupBar name={name}/>
+          <GroupBar name={name}/>
       </div>
       <div className="container">
           <InfoBar room={room} />

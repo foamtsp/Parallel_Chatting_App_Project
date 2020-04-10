@@ -5,7 +5,6 @@ import './Join.css';
 
 export default function SignIn() {
   const [name, setName] = useState('');
-  const [isLogin, setIsLogin] = useState('')
 
   const onLogin= (name) =>{
 
@@ -41,11 +40,11 @@ export default function SignIn() {
       <div className="joinInnerContainer">
         <h1 className="heading">Join</h1>
         <div>
-          <input placeholder="Name" className="joinInput" type="text" onChange={(event) => setName(event.target.value)} onKeyPress={(event)=>event.key === 'Enter'? onLogin(name):event.preventDefault()}/>
+          <input placeholder="Name" className="joinInput" type="text" onChange={(event) => setName(event.target.value)} onKeyPress={(event)=>event.key === 'Enter'? onLogin(name):null}/>
         </div>
        
         <Link onClick={e => (!name) ? e.preventDefault() : null}>
-          <button className={'button mt-20'} onClick={()=>onLogin(name)} type="submit">Sign In</button>
+          <button className={'button mt-20'} onClick={e => (!name) ? e.preventDefault() : onLogin(name)} type="submit">Sign In</button>
         </Link>
       </div>
     </div>
