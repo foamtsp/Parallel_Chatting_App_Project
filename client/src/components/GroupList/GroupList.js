@@ -48,7 +48,7 @@ const leaveGroup = (name,groupName) => {
       }
       return response.json();
     })
-    .then(timer = setTimeout(() => window.location.reload(false), 1200));
+    .then(timer = setTimeout(() => window.location.reload(false), 1500));
     
 }
 
@@ -76,7 +76,6 @@ const renderList = (name,listing) => {
           <div>
             <li>
               {group['groupName']}
-              {console.log(group)}
               <button onClick={()=>joinGroup(name,group['groupName'])}>Join</button>
             </li>
           </div>

@@ -45,13 +45,37 @@ const Chat = ({ location }) => {
     });
 }, []);
 
-  const sendMessage = (event) => {
-    event.preventDefault();
 
-    if(message) {
-      socket.emit('sendMessage', message, () => setMessage(''));
-    }
+const sendMessage = (event) => {
+  event.preventDefault();
+  var current_date = new Date();
+  current_date = current_date.toLocaleString();
+
+  if(message) {
+    socket.emit('sendMessage', message, current_date, () => setMessage(''));
+    onSendMessage(name,message,current_date,room)
   }
+}
+
+const onSendMessage = (name,text,current_date,groupname) =>{
+ 
+  let timer = null;
+
+  var sending_data = {
+    name:name,
+    time_stamp:current_date,
+    messages:text,
+
+  }
+
+  fetch("http://localhost:4000/api/groups/"+groupname+"/message" , {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(sending_data)
+  })
+}
+
+  
 
   if(room=="default"){
     return(
@@ -77,7 +101,7 @@ const Chat = ({ location }) => {
           {console.log(room)}
           <InfoBar room={room} />
           <Messages messages={messages} name={name} />
-          <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
+          <Input message={message} setMessage={setMessage} sendMessage={sendMessage} name={name} groupname={room}/>
       </div>
       {/* <TextContainer users={users}/> */}
     </div>
