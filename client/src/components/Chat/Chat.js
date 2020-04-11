@@ -2,14 +2,12 @@ import React, { useState, useEffect } from "react";
 import queryString from 'query-string';
 import io from "socket.io-client";
 
-import TextContainer from '../TextContainer/TextContainer';
 import Messages from '../Messages/Messages';
 import InfoBar from '../InfoBar/InfoBar';
 import Input from '../Input/Input';
 
 import './Chat.css';
 import GroupBar from '../GroupBar/GroupBar';
-import GroupList from "../GroupList/GroupList";
 let socket;
 
 const Chat = ({ location }) => {
@@ -40,7 +38,7 @@ const Chat = ({ location }) => {
   useEffect(() => {
     socket.on('message', message => {
       console.log(message)
-      setMessages(messages => [ ...messages, message ]);
+      setMessages(messages => [ ...messages, message ].sort((a, b) => (a.timestamp > b.timestamp) ? 1 : -1));
     });
     
     socket.on("roomData", ({ users }) => {
@@ -85,6 +83,8 @@ const fetchOldMessage = async (groupname) => {
     messages.push(message)
   });
 
+  messages.sort((a, b) => (a.timestamp > b.timestamp) ? 1 : -1)
+
   setMessages(messages)
 }
 
@@ -109,7 +109,7 @@ const onSendMessage = (name,text,current_date,groupname) =>{
 
   
 
-  if(room=="default"){
+  if(room ==="default"){
     return(
     
     <div className="outerContainer">
@@ -117,7 +117,7 @@ const onSendMessage = (name,text,current_date,groupname) =>{
             <GroupBar name={name}/>
       </div>
       <div className="container">
-        <h1>Select Group To Chat</h1>
+        <h1 className="center">Select Group To Chat</h1>
       </div>
       {/* <TextContainer users={users}/> */}
     </div>

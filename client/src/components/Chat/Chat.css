@@ -26,6 +26,12 @@
   width: 25%;
 }
 
+.center{
+  display: flex;
+  justify-self: center;
+  align-self: center;
+}
+
 @media (min-width: 320px) and (max-width: 480px) {
   .outerContainer {
     height: 100%;

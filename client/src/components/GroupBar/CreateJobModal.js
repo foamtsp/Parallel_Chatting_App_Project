@@ -1,10 +1,6 @@
-import React, { useState,Component } from 'react';
+import React, { useState } from 'react';
 import Modal from 'react-modal';
 import './CreateJobModal.css';
-
-
-
-
 
 
 const CreateJobModal = ({ name }) => {
@@ -29,7 +25,7 @@ const CreateJobModal = ({ name }) => {
   const onCreateGroup = (name) =>{
     var groupname = document.getElementById('groupname').value
     groupname = groupname.trim()
-    if(groupname.length == 0){
+    if(groupname.length === 0){
         alert('Please Fill Group Name')
     }
     else{
