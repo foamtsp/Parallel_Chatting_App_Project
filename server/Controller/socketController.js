@@ -100,13 +100,13 @@ exports.leaveGroup = async (name, groupName) => {
         };
 
         // pull user from group member
-        const currentGroup = await Group.findOneAndUpdate({
-            groupName,
-        }, {
-            $pull: {
-                members: currentUser._id,
-            },
-        });
+        // const currentGroup = await Group.findOneAndUpdate({
+        //     groupName,
+        // }, {
+        //     $pull: {
+        //         members: currentUser._id,
+        //     },
+        // });
 
         // save leaveTimeStamp by create default
         const record = await UserRecord.create({
