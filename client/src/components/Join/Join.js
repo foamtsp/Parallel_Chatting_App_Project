@@ -8,8 +8,6 @@ export default function SignIn() {
 
   const onLogin= (name) =>{
 
-        let timer = null;
-
         var sending_data = {
           name:name,
         }
@@ -28,9 +26,6 @@ export default function SignIn() {
         .then( 
             window.location.href = "/chat?name="+name+'&room=default'
         )
-        .then(
-            timer = setTimeout(() => window.location.reload(false), 500)
-        );
     
     
   }

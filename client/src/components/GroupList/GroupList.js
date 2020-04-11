@@ -25,7 +25,7 @@ const joinGroup = (name,groupName) => {
       }
       return response.json();
     })
-    .then(timer = setTimeout(() => window.location.reload(false), 1000));
+    .then(timer = setTimeout(() => window.location.reload(false), 500));
     
 }
 
@@ -48,7 +48,7 @@ const leaveGroup = (name,groupName) => {
       }
       return response.json();
     })
-    .then(timer = setTimeout(() => window.location.reload(false), 1500));
+    .then(timer = setTimeout(() => window.location.reload(false), 500));
     
 }
 
@@ -64,9 +64,9 @@ const renderList = (name,listing) => {
           return (
 
             <div>
-              <li onClick={()=>onChangeGroupChat(name,group['groupName'])}>
-                {group['groupName']}
-                <button onClick={()=>leaveGroup(name,group['groupName'])}>Leave</button>
+              <li className="group" onClick={()=>onChangeGroupChat(name,group['groupName'])}>
+                <p>{group['groupName']}</p>
+                <button className="leave" onClick={()=>leaveGroup(name,group['groupName'])}>Leave</button>
               </li>
             </div>
         )
@@ -74,9 +74,9 @@ const renderList = (name,listing) => {
         return (
 
           <div>
-            <li>
-              {group['groupName']}
-              <button onClick={()=>joinGroup(name,group['groupName'])}>Join</button>
+            <li className="group">
+              <p>{group['groupName']}</p>
+              <button className="join" onClick={()=>joinGroup(name,group['groupName'])}>Join</button>
             </li>
           </div>
       )

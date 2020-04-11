@@ -22,3 +22,29 @@
     display: flex;
     justify-content: center;
   }
+
+  .group{
+    display: flex;
+  }
+
+  .group button{
+    display: flex;
+    flex-grow: 0;
+    margin: 10px 0px;
+    font-size: 1rem;
+    border-radius: 10px;
+    color: white;
+  }
+
+  .join {
+    background-color: green;
+  }
+
+  .leave {
+    background-color: red;
+  }
+
+  .group p{
+    display: flex;
+    flex-grow: 1;
+  }

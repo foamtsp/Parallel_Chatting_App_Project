@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
-import queryString from 'query-string';
 import CreateJobModal from "./CreateJobModal";
 import './GroupBar.css';
 import GroupList from "../GroupList/GroupList";
