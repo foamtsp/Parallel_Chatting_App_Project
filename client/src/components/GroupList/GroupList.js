@@ -68,20 +68,22 @@ const renderList = (name, listing) => {
         return (
 
           <div>
-            <li onClick={() => onChangeGroupChat(name, group['groupName'])}>
-              {group['groupName']}
+            <li className="group">
+              <p onClick={() => onChangeGroupChat(name, group['groupName'])}>{group['groupName']}</p>
+              <button className="leave" onClick={() => leaveGroup(name, group['groupName'])}>Leave</button>
             </li>
-            <button onClick={() => leaveGroup(name, group['groupName'])}>Leave</button>
+            {/* <button onClick={() => leaveGroup(name, group['groupName'])}>Leave</button> */}
           </div>
         )
       }
       return (
 
         <div>
-          <li>
-            {group['groupName']}
+          <li className="group">
+            <p>{group['groupName']}</p>
+            <button className='join' onClick={() => joinGroup(name, group['groupName'])}>Join</button>
           </li>
-          <button onClick={() => joinGroup(name, group['groupName'])}>Join</button>
+          {/* <button onClick={() => joinGroup(name, group['groupName'])}>Join</button> */}
         </div>
       )
 
