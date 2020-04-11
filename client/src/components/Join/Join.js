@@ -8,6 +8,8 @@ export default function SignIn() {
 
   const onLogin= (name) =>{
 
+        let timer = null;
+
         var sending_data = {
           name:name,
         }
@@ -24,10 +26,11 @@ export default function SignIn() {
             return response.json();
           })
         .then( 
-            window.location.href = "/chat?name="+name+'&room=default'
+            timer = setTimeout(() => window.location.reload(false), 500)
         )
-    
-    
+        .then(
+            window.location.href = "/chat?name="+name+'&room=default'
+        );
   }
 
   return (

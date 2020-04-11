@@ -25,7 +25,8 @@ const joinGroup = (name,groupName) => {
       }
       return response.json();
     })
-    .then(timer = setTimeout(() => window.location.reload(false), 500));
+    .then(timer = setTimeout(() => window.location.reload(false), 500))
+    .then(window.location.href = "/chat?name="+name+'&room='+groupName);
     
 }
 
@@ -37,19 +38,23 @@ const leaveGroup = (name,groupName) => {
     groupName:groupName,
   }
 
+
   fetch("http://localhost:4000/api/users/"+name+"/leavegroup" , {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(sending_data)
-})
+    })
     .then(function (response) {
       if (response.status >= 400) {
         throw new Error("Bad response from server");
       }
       return response.json();
     })
-    .then(timer = setTimeout(() => window.location.reload(false), 500));
+    .then(timer = setTimeout(() => window.location.reload(false), 1000))
     
+    .then(window.location.href = "/chat?name="+name+'&room=default');
+    
+
 }
 
 const renderList = (name,listing) => {
@@ -60,14 +65,15 @@ const renderList = (name,listing) => {
         for(var x in group['members']){
           list.push(group['members'][x]['name'])
         }
-        if(list.includes(name)){
+        if(list.includes(name)){// when click leave Btn onChange will active
           return (
 
             <div>
-              <li className="group" onClick={()=>onChangeGroupChat(name,group['groupName'])}>
-                <p>{group['groupName']}</p>
+              <li className="group" >
+                <p onClick={()=>onChangeGroupChat(name,group['groupName'])}>{group['groupName']}</p>
                 <button className="leave" onClick={()=>leaveGroup(name,group['groupName'])}>Leave</button>
               </li>
+              {/* <button onClick={()=>leaveGroup(name,group['groupName'])}>Leave</button>  */}
             </div>
         )
         }
@@ -78,6 +84,7 @@ const renderList = (name,listing) => {
               <p>{group['groupName']}</p>
               <button className="join" onClick={()=>joinGroup(name,group['groupName'])}>Join</button>
             </li>
+            {/* <button onClick={()=>joinGroup(name,group['groupName'])}>Join</button> */}
           </div>
       )
         
