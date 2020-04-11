@@ -308,13 +308,13 @@ exports.leaveGroup = async (req, res, next) => {
       name
     });
 
-    if (!currentUser.currentGroup) {
-      res.status(400).json({
-        status: 'fail',
-        message: 'This user already not in any group.'
-      });
-      throw new Error('This user already not in any group.');
-    };
+    // if (!currentUser.currentGroup) {
+    //   res.status(400).json({
+    //     status: 'fail',
+    //     message: 'This user already not in any group.'
+    //   });
+    //   throw new Error('This user already not in any group.');
+    // };
 
     // pull user from group
     await Group.findOneAndUpdate({
