@@ -26,7 +26,7 @@ const GroupBar = ({ name,onSendLeaveMessage }) => {
             </div>
           </div>
           <div className="GroupContainer">
-              <GroupList name={name} onSendLeaveMessage={onSendLeaveMessage}/>
+              <GroupList name={name}/>
           </div>
         </div>
           

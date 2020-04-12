@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import './GroupList.css'
 
-const onChangeGroupChat = (name, group,onSendLeaveMessage) => {
-  onSendLeaveMessage();
+const onChangeGroupChat = (name, group) => {
   window.location.href = "/chat?name=" + name + '&room=' + group;
 }
 
@@ -56,7 +55,7 @@ const leaveGroup = async (name, groupName) => {
 
 }
 
-const renderList = (name, listing ,onSendLeaveMessage) => {
+const renderList = (name, listing ) => {
   return (
 
     listing.map((group) => {
@@ -69,7 +68,7 @@ const renderList = (name, listing ,onSendLeaveMessage) => {
 
           <div>
             <li className="group">
-              <p onClick={() => onChangeGroupChat(name, group['groupName'],onSendLeaveMessage)}>{group['groupName']}</p>
+              <p onClick={() => onChangeGroupChat(name, group['groupName'])}>{group['groupName']}</p>
               <button className="leave" onClick={() => leaveGroup(name, group['groupName'])}>Leave</button>
             </li>
             {/* <button onClick={() => leaveGroup(name, group['groupName'])}>Leave</button> */}
@@ -115,7 +114,7 @@ const GroupList = ({ name,onSendLeaveMessage }) => {
     return (<h3 className="loading">Loading...</h3>)
   }
   return (
-    <ul>{renderList(name, groupnames,onSendLeaveMessage)}</ul>)
+    <ul>{renderList(name, groupnames)}</ul>)
 }
 
 export default GroupList;
