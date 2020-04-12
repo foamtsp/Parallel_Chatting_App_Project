@@ -59,18 +59,20 @@ io.on('connection', (socket) => {
   console.log('New user connected');
 
   socket.on('join_group', (data) => {
-    const { userName, groupName } = data;
+    const { name, groupName } = data;
+    socket.emit('message', {
+      user: 'admin',
+      text: `${name} has joined to the ${groupName} room.`,
+    });
+    socket.broadcast.to(groupName).emit('message', {
+      user: 'admin',
+      text: `${name} has joined!`,
+    });
 
   });
 
   //fix to join after select group in left panel
   socket.on('join', async ({ name, room }, callback) => {
-    // const { error, user } = addUser({
-    //   id: socket.id,
-    //   name,
-    //   room,
-    // });
-
     const groupName = room
     // join to db
     try {
@@ -79,11 +81,6 @@ io.on('connection', (socket) => {
     } catch (error) {
       console.log(error)
     }
-
-
-    //get unread message if user existed
-
-    // if (error) return callback(error);
 
     socket.join(groupName);
 
@@ -101,10 +98,15 @@ io.on('connection', (socket) => {
       groupName,
     });
 
+    //not used in front
     io.to(groupName).emit('roomData', {
       room: groupName,
-      users: group.members,
+      users:[]
+      // users: group.members,
     });
+
+
+
 
     socket.on('sendMessage', async (message, callback) => {
       // const user = getUser(socket.id);
@@ -130,18 +132,21 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
       //save to user's timestamp logout
       //your code here
-      SocketController.leaveGroup(name, groupName)
+      if (groupName !== "default") {
+        SocketController.leaveGroup(name, groupName)
+      }
+      
       io.to(groupName).emit('roomData', {
         room: groupName,
-        users: group.members,
+        users: [],
       });
       console.log("disconnect")
-      
+
     });
 
     socket.on('leave', () => {
       io.to(groupName).emit('message', {
-        user: 'Admin',
+        user: 'admin',
         text: `${name} has left.`,
       });
     })

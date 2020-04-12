@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
 import './GroupList.css'
+import io from "socket.io-client";
+const ENDPOINT = 'localhost:4000';
+
+let socket = io(ENDPOINT);
 
 const onChangeGroupChat = (name, group) => {
   window.location.href = "/chat?name=" + name + '&room=' + group;
@@ -22,6 +26,11 @@ const joinGroup = async (name, groupName) => {
       if (response.status >= 400) {
         throw new Error("Bad response from server");
       }
+      socket.emit('join_group', { name, groupName }, (error) => {
+        if (error) {
+          alert(error);
+        }
+      });
       return response.json();
     })
     .then(timer = setTimeout(() => window.location.reload(false), 1000));
@@ -55,7 +64,7 @@ const leaveGroup = async (name, groupName) => {
 
 }
 
-const renderList = (name, listing ) => {
+const renderList = (name, listing) => {
   return (
 
     listing.map((group) => {
@@ -90,7 +99,7 @@ const renderList = (name, listing ) => {
   )
 }
 
-const GroupList = ({ name,onSendLeaveMessage }) => {
+const GroupList = ({ name, onSendLeaveMessage }) => {
 
   const [groupnames, setGroupNames] = useState('');
 

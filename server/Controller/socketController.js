@@ -12,7 +12,7 @@ exports.joinGroup = async (name, groupName) => {
         const user = await User.findOneAndUpdate({
             name,
         }, {
-            currentGroup: group._id
+            currentGroup: group
         }, {
             new: true,
             runValidators: true
@@ -99,7 +99,6 @@ exports.leaveGroup = async (name, groupName) => {
         });
 
         // save leaveTimeStamp by create default
-        
         let record = await UserRecord.findOne({
             name,
             group: currentGroup
