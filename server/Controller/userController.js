@@ -237,8 +237,10 @@ exports.joinGroup = async (req, res, next) => {
       throw new Error('This group name dose not exists.');
     }
 
-    let record = await UserRecord.find({
-      name
+    let record = await UserRecord.create({
+      name,
+      joinAt: new Date(),
+      group: group._id
     });
 
     let readMessages = [];
@@ -254,7 +256,10 @@ exports.joinGroup = async (req, res, next) => {
     }, {
       currentGroup: group._id,
       readMessages,
-      unreadMessages
+      unreadMessages,
+      $push: {
+        userRecords: record._id,
+      }
     }, {
       new: true,
       runValidators: true
@@ -308,16 +313,8 @@ exports.leaveGroup = async (req, res, next) => {
       name
     });
 
-    // if (!currentUser.currentGroup) {
-    //   res.status(400).json({
-    //     status: 'fail',
-    //     message: 'This user already not in any group.'
-    //   });
-    //   throw new Error('This user already not in any group.');
-    // };
-
     // pull user from group
-    await Group.findOneAndUpdate({
+    const group = await Group.findOneAndUpdate({
       groupName
     }, {
       $pull: {
@@ -325,16 +322,28 @@ exports.leaveGroup = async (req, res, next) => {
       }
     });
 
+    const record = await UserRecord.findOne({
+      name,
+      group: group._id
+    })
 
     const user = await User.findOneAndUpdate({
       name
     }, {
       currentGroup: null,
       readMessages: [],
-      unreadMessages: []
+      unreadMessages: [],
+      $pull: {
+        userRecords: record._id
+      }
     }, {
       new: true
     });
+
+    await UserRecord.findOneAndDelete({
+      name,
+      group: group._id
+    })
 
     res.status(200).json({
       status: 'success',

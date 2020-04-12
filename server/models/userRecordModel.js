@@ -13,6 +13,9 @@ const userRecordSchema = new mongoose.Schema({
     type: Date,
     default: new Date(),
   },
+  joinAt:{
+    type: Date
+  }
 });
 
 userRecordSchema.index({
