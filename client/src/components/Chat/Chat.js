@@ -16,7 +16,7 @@ const Chat = ({ location }) => {
   const [users, setUsers] = useState('');
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
-  const [oldmessages, setOldMessages] = useState([]);
+  const [last_timestamp, setLast_TimeStamp] = useState('');
   const ENDPOINT = 'localhost:4000';
 
   useEffect(() => {
@@ -32,7 +32,7 @@ const Chat = ({ location }) => {
         alert(error);
       }
     });
-    fetchOldMessage(room);
+    fetchOldMessage(room,name);
   }, [ENDPOINT, location.search]);
   
   useEffect(() => {
@@ -56,12 +56,11 @@ const sendMessage = (event) => {
 
   if(message) {
     socket.emit('sendMessage', msg, () => setMessage(''));
-    onSendMessage(name,message,current_date,room)
   }
   
 }
 
-const fetchOldMessage = async (groupname) => {
+const fetchOldMessage = async (groupname,name) => {
 
   if (groupname === "default") return;
   
@@ -69,17 +68,44 @@ const fetchOldMessage = async (groupname) => {
 
   const apiCall = await fetch("http://localhost:4000/api/groups/"+groupname+"/message", {method: 'GET',});
   const apiCall2 = await apiCall.json()
-
+  const apiCallLastTimeStamp = await fetch("http://localhost:4000/api/userRecords/"+name, {method: 'GET',});
+  const apiCallLastTimeStamp2 = await apiCallLastTimeStamp.json()
+  
   var msgs = apiCall2.data;
+  var time_stamps = apiCallLastTimeStamp2.data;
+  var time_stamp = null;
+  let last_index = time_stamps.length;
+  console.log(time_stamps);
+  for(var i = last_index-1;i>=0;i--){
+    if(time_stamps[i]['group']['groupName'] == groupname){
+      time_stamp = time_stamps[i]['leaveTimestamp']
+    }
+  }
 
-  console.log(msgs)
+  console.log(time_stamp);
+
+  var once = true;
+
+  
 
   msgs.forEach(msg => {
     let message = {
       text:msg.text,
       user:msg.author,
       timestamp:msg.createdAt
+    
     }
+    console.log(message['timestamp']>time_stamp);
+    if(message['timestamp']>time_stamp && once){
+      let unread_message = {
+        text:'------------------------------------------------------------Unread Message------------------------------------------------------------',
+        user:'admin',
+        timestamp:time_stamp
+      }
+      once = false;
+      messages.push(unread_message)
+    }
+    
     messages.push(message)
   });
 
@@ -88,24 +114,16 @@ const fetchOldMessage = async (groupname) => {
   setMessages(messages)
 }
 
-const onSendMessage = (name,text,current_date,groupname) =>{
+// const onSendLeaveMessage = () =>{
 
+//   var current_date = new Date();
+//   current_date = current_date.toLocaleString();
 
-  var sending_data = {
-    name:name,
-    time_stamp:current_date,
-    message:text,
+//   const msg = {text:name+'has leave', timestamp: new Date()};
 
-  }
-
-  console.log(sending_data)
-
-  // fetch("http://localhost:4000/api/groups/"+groupname+"/message" , {
-  //     method: 'POST',
-  //     headers: { 'Content-Type': 'application/json' },
-  //     body: JSON.stringify(sending_data)
-  // })
-}
+//   socket.emit('leave', msg, () => setMessage(''));
+  
+// }
 
   
 
@@ -127,7 +145,8 @@ const onSendMessage = (name,text,current_date,groupname) =>{
     
     <div className="outerContainer">
       <div className="groupcontainer">
-          <GroupBar name={name}/>
+        {/* {onSendLeaveMessage={onSendLeaveMessage}} */}
+          <GroupBar name={name} />
       </div>
       <div className="container">
           <InfoBar room={room} />

@@ -6,31 +6,21 @@ import './Join.css';
 export default function SignIn() {
   const [name, setName] = useState('');
 
-  const onLogin= (name) =>{
+  const onLogin= async (name) =>{
 
         let timer = null;
 
         var sending_data = {
           name:name,
         }
-
-        fetch("http://localhost:4000/api/users" , {
+        await(fetch("http://localhost:4000/api/users" , {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(sending_data)
-        })
-        .then(function (response) {
-            if (response.status >= 400) {
-              throw new Error("Bad response from server");
-            }
-            return response.json();
-          })
-        .then( 
-            timer = setTimeout(() => window.location.reload(false), 500)
-        )
-        .then(
-            window.location.href = "/chat?name="+name+'&room=default'
-        );
+        }))
+        
+        await (window.location.href = "/chat?name="+name+'&room=default')
+      
   }
 
   return (

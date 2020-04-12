@@ -4,7 +4,7 @@ import CreateJobModal from "./CreateJobModal";
 import './GroupBar.css';
 import GroupList from "../GroupList/GroupList";
 
-
+//onSendLeaveMessage
 
 const GroupBar = ({ name }) => {
   
