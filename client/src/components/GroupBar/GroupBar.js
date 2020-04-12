@@ -6,7 +6,7 @@ import GroupList from "../GroupList/GroupList";
 
 //onSendLeaveMessage
 
-const GroupBar = ({ name }) => {
+const GroupBar = ({ name,onSendLeaveMessage }) => {
   
 
   return (
@@ -26,7 +26,7 @@ const GroupBar = ({ name }) => {
             </div>
           </div>
           <div className="GroupContainer">
-              <GroupList name={name}/>
+              <GroupList name={name} onSendLeaveMessage={onSendLeaveMessage}/>
           </div>
         </div>
           

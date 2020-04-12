@@ -114,16 +114,16 @@ const fetchOldMessage = async (groupname,name) => {
   setMessages(messages)
 }
 
-// const onSendLeaveMessage = () =>{
+const onSendLeaveMessage = () =>{
 
-//   var current_date = new Date();
-//   current_date = current_date.toLocaleString();
+  var current_date = new Date();
+  current_date = current_date.toLocaleString();
 
-//   const msg = {text:name+'has leave', timestamp: new Date()};
+  const msg = {text:name+'has leave', timestamp: new Date()};
 
-//   socket.emit('leave', msg, () => setMessage(''));
+  socket.emit('leave', msg, () => setMessage(''));
   
-// }
+}
 
   
 
@@ -146,7 +146,7 @@ const fetchOldMessage = async (groupname,name) => {
     <div className="outerContainer">
       <div className="groupcontainer">
         {/* {onSendLeaveMessage={onSendLeaveMessage}} */}
-          <GroupBar name={name} />
+          <GroupBar name={name} onSendLeaveMessage={onSendLeaveMessage}/>
       </div>
       <div className="container">
           <InfoBar room={room} />

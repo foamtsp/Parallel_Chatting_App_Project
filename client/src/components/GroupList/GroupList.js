@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import './GroupList.css'
 
-const onChangeGroupChat = (name, group) => {
-
+const onChangeGroupChat = (name, group,onSendLeaveMessage) => {
+  onSendLeaveMessage();
   window.location.href = "/chat?name=" + name + '&room=' + group;
 }
 
@@ -56,7 +56,7 @@ const leaveGroup = async (name, groupName) => {
 
 }
 
-const renderList = (name, listing) => {
+const renderList = (name, listing ,onSendLeaveMessage) => {
   return (
 
     listing.map((group) => {
@@ -69,7 +69,7 @@ const renderList = (name, listing) => {
 
           <div>
             <li className="group">
-              <p onClick={() => onChangeGroupChat(name, group['groupName'])}>{group['groupName']}</p>
+              <p onClick={() => onChangeGroupChat(name, group['groupName'],onSendLeaveMessage)}>{group['groupName']}</p>
               <button className="leave" onClick={() => leaveGroup(name, group['groupName'])}>Leave</button>
             </li>
             {/* <button onClick={() => leaveGroup(name, group['groupName'])}>Leave</button> */}
@@ -91,7 +91,7 @@ const renderList = (name, listing) => {
   )
 }
 
-const GroupList = ({ name }) => {
+const GroupList = ({ name,onSendLeaveMessage }) => {
 
   const [groupnames, setGroupNames] = useState('');
 
@@ -115,7 +115,7 @@ const GroupList = ({ name }) => {
     return (<h3 className="loading">Loading...</h3>)
   }
   return (
-    <ul>{renderList(name, groupnames)}</ul>)
+    <ul>{renderList(name, groupnames,onSendLeaveMessage)}</ul>)
 }
 
 export default GroupList;
