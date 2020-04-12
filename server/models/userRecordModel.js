@@ -11,7 +11,7 @@ const userRecordSchema = new mongoose.Schema({
   },
   leaveTimestamp: {
     type: Date,
-    default: Date.now(),
+    default: new Date(),
   },
 });
 

@@ -56,7 +56,7 @@ exports.sendMessage = async (name, groupName, message, time) => {
             author: user.name,
             group: group._id,
             text: message,
-            createdAt:time
+            createdAt: time
         });
 
         // Add message id to user
@@ -90,47 +90,53 @@ exports.sendMessage = async (name, groupName, message, time) => {
 
 exports.leaveGroup = async (name, groupName) => {
     try {
-
         const currentUser = await User.findOne({
             name
         });
 
-        if (!currentUser.currentGroup) {
-            throw new Error('This user already not in any group.');
-        };
-
-        // pull user from group member
-        // const currentGroup = await Group.findOneAndUpdate({
-        //     groupName,
-        // }, {
-        //     $pull: {
-        //         members: currentUser._id,
-        //     },
-        // });
+        const currentGroup = await Group.findOne({
+            groupName,
+        });
 
         // save leaveTimeStamp by create default
-        const record = await UserRecord.create({
+        
+        let record = await UserRecord.findOne({
             name,
-            group: currentGroup._id,
-            leaveTimestamp: Date.now(),
-        });
+            group: currentGroup
+        })
+        if (!record) {
+            console.log("no record")
+            record = await UserRecord.create({
+                name,
+                group: currentGroup._id,
+                leaveTimestamp: new Date()
+            });
+            const user = await User.findOneAndUpdate({
+                name,
+            }, {
+                currentGroup: null,
+                $push: {
+                    userRecords: record._id,
+                }
+            }, {
+                new: true,
+                runValidators: true
+            }).populate({
+                path: 'userRecords',
+                select: '-name',
+                model: 'UserRecord',
+            });
+
+        } else {
+            console.log("got record")
+            await UserRecord.findByIdAndUpdate({
+                _id: record._id
+            }, {
+                leaveTimestamp: new Date()
+            })
+        }
 
         // push record to user and populate to output
-        const user = await User.findOneAndUpdate({
-            name,
-        }, {
-            currentGroup: null,
-            $push: {
-                userRecords: record._id,
-            },
-        }, {
-            new: true,
-            runValidators: true
-        }).populate({
-            path: 'userRecords',
-            select: '-name',
-            model: 'UserRecord',
-        });
 
     } catch (err) {
         throw new Error(err.message);

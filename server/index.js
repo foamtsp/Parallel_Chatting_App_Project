@@ -128,26 +128,29 @@ io.on('connection', (socket) => {
     });
 
     socket.on('disconnect', () => {
-
       //save to user's timestamp logout
       //your code here
       SocketController.leaveGroup(name, groupName)
-      io.to(groupName).emit('message', {
-        user: 'Admin',
-        text: `${name} has left.`,
-      });
       io.to(groupName).emit('roomData', {
         room: groupName,
         users: group.members,
       });
       console.log("disconnect")
+      
     });
+
+    socket.on('leave', () => {
+      io.to(groupName).emit('message', {
+        user: 'Admin',
+        text: `${name} has left.`,
+      });
+    })
 
     callback();
   });
 
 
- 
+
 });
 
 server.listen(SERVER_PORT, () => {
