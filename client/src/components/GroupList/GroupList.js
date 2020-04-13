@@ -97,7 +97,7 @@ const GroupList = ({ name}) => {
         for (var x in group['members']) {
           list.push(group['members'][x]['name'])
         }
-        if (list.includes(name)) {// when click leave Btn onChange will active
+        if (list.includes(name)) {
           return (
   
             <div>
@@ -105,7 +105,6 @@ const GroupList = ({ name}) => {
                 <p onClick={() => onChangeGroupChat(name, group['groupName'])}>{group['groupName']}</p>
                 <button className="leave" onClick={() => leaveGroup(name, group['groupName'])}>Leave</button>
               </li>
-              {/* <button onClick={() => leaveGroup(name, group['groupName'])}>Leave</button> */}
             </div>
           )
         }
@@ -116,7 +115,6 @@ const GroupList = ({ name}) => {
               <p>{group['groupName']}</p>
               <button className='join' onClick={() => joinGroup(name, group['groupName'])}>Join</button>
             </li>
-            {/* <button onClick={() => joinGroup(name, group['groupName'])}>Join</button> */}
           </div>
         )
   

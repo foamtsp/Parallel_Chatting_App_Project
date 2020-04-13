@@ -80,24 +80,12 @@ const fetchOldMessage = async (groupname,name) => {
   for(var i = last_index-1;i>=0;i--){
     if(time_stamps[i]['group']['groupName'] == groupname){
       time_stamp = time_stamps[i]['leaveTimestamp']
+      first_time_stamp = time_stamps[i]['joinAt']
       break;
     }
   }
 
-  for(var i = 0;i<last_index;i++){
-    if(time_stamps[i]['group']['groupName'] == groupname){
-      first_time_stamp =time_stamps[i]['leaveTimestamp']
-      break;
-    }
-  }  
-  console.log(time_stamp)
-
-  console.log(first_time_stamp)
-
-
   var once = true;
-
-  
 
   msgs.forEach(msg => {
     let message = {
@@ -106,7 +94,7 @@ const fetchOldMessage = async (groupname,name) => {
       timestamp:msg.createdAt
     
     }
-    if(message['timestamp']>time_stamp && once){
+    if(message['timestamp']>time_stamp && once && messages.length>0){
       let unread_message = {
         text:'------------------------------------------------------------Unread Message------------------------------------------------------------',
         user:'admin',
@@ -115,27 +103,15 @@ const fetchOldMessage = async (groupname,name) => {
       once = false;
       messages.push(unread_message)
     }
-    
-    messages.push(message)
+    if(msg.createdAt>first_time_stamp){
+      messages.push(message)
+    }
   });
 
   messages.sort((a, b) => (a.timestamp > b.timestamp) ? 1 : -1)
 
   setMessages(messages)
 }
-
-const onSendLeaveMessage = () =>{
-
-  var current_date = new Date();
-  current_date = current_date.toLocaleString();
-
-  const msg = {text:name+'has leave', timestamp: new Date()};
-
-  socket.emit('leave', msg, () => setMessage(''));
-}
-
-
-  
 
   if(room ==="default"){
     return(
