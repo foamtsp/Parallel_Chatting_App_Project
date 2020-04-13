@@ -67,9 +67,24 @@ io.on('connection', (socket) => {
     socket.broadcast.to(groupName).emit('message', {
       user: 'admin',
       text: `${name} has joined!`,
+      timestamp: new Date()
     });
 
   });
+
+  // socket.on('leave', (data) => {
+  //   const { name, groupName } = data;
+  //   socket.emit('message', {
+  //     user: 'admin',
+  //     text: `${name} has left from the ${groupName} room.`,
+  //   });
+  //   socket.broadcast.to(groupName).emit('message', {
+  //     user: 'admin',
+  //     text: `${name} has left.`,
+  //     timestamp: new Date()
+  //   });
+
+  // });
 
   //fix to join after select group in left panel
   socket.on('join', async ({ name, room }, callback) => {
@@ -101,7 +116,7 @@ io.on('connection', (socket) => {
     //not used in front
     io.to(groupName).emit('roomData', {
       room: groupName,
-      users:[]
+      users: []
       // users: group.members,
     });
 
@@ -135,7 +150,7 @@ io.on('connection', (socket) => {
       if (groupName !== "default") {
         SocketController.leaveGroup(name, groupName)
       }
-      
+
       io.to(groupName).emit('roomData', {
         room: groupName,
         users: [],
@@ -144,15 +159,10 @@ io.on('connection', (socket) => {
 
     });
 
-    socket.on('leave', () => {
-      io.to(groupName).emit('message', {
-        user: 'admin',
-        text: `${name} has left.`,
-      });
-    })
 
     callback();
   });
+
 
 
 
