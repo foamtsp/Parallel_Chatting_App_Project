@@ -55,6 +55,11 @@ const leaveGroup = async (name, groupName) => {
       if (response.status >= 400) {
         throw new Error("Bad response from server");
       }
+      socket.emit('leave', { name, groupName }, (error) => {
+        if (error) {
+          alert(error);
+        }
+      })
       return response.json();
     })
     .then(timer = setTimeout(() => window.location.reload(false), 1000))
