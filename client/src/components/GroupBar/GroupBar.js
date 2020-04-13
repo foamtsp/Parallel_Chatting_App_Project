@@ -6,7 +6,7 @@ import GroupList from "../GroupList/GroupList";
 
 //onSendLeaveMessage
 
-const GroupBar = ({ name,onSendLeaveMessage }) => {
+const GroupBar = ({ name}) => {
   
 
   return (

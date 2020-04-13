@@ -74,15 +74,26 @@ const fetchOldMessage = async (groupname,name) => {
   var msgs = apiCall2.data;
   var time_stamps = apiCallLastTimeStamp2.data;
   var time_stamp = null;
+  var first_time_stamp = null;
   let last_index = time_stamps.length;
-  console.log(time_stamps);
+
   for(var i = last_index-1;i>=0;i--){
     if(time_stamps[i]['group']['groupName'] == groupname){
       time_stamp = time_stamps[i]['leaveTimestamp']
+      break;
     }
   }
 
-  console.log(time_stamp);
+  for(var i = 0;i<last_index;i++){
+    if(time_stamps[i]['group']['groupName'] == groupname){
+      first_time_stamp =time_stamps[i]['leaveTimestamp']
+      break;
+    }
+  }  
+  console.log(time_stamp)
+
+  console.log(first_time_stamp)
+
 
   var once = true;
 
@@ -95,7 +106,6 @@ const fetchOldMessage = async (groupname,name) => {
       timestamp:msg.createdAt
     
     }
-    console.log(message['timestamp']>time_stamp);
     if(message['timestamp']>time_stamp && once){
       let unread_message = {
         text:'------------------------------------------------------------Unread Message------------------------------------------------------------',
@@ -122,8 +132,8 @@ const onSendLeaveMessage = () =>{
   const msg = {text:name+'has leave', timestamp: new Date()};
 
   socket.emit('leave', msg, () => setMessage(''));
-  
 }
+
 
   
 
@@ -145,15 +155,13 @@ const onSendLeaveMessage = () =>{
     
     <div className="outerContainer">
       <div className="groupcontainer">
-        {/* {onSendLeaveMessage={onSendLeaveMessage}} */}
-          <GroupBar name={name} onSendLeaveMessage={onSendLeaveMessage}/>
+          <GroupBar name={name}/>
       </div>
       <div className="container">
           <InfoBar room={room} />
           <Messages messages={messages} name={name} />
           <Input message={message} setMessage={setMessage} sendMessage={sendMessage} name={name} groupname={room}/>
       </div>
-      {/* <TextContainer users={users}/> */}
     </div>
   );
   
