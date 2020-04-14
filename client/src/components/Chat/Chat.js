@@ -17,7 +17,7 @@ const Chat = ({ location }) => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const [last_timestamp, setLast_TimeStamp] = useState('');
-  const ENDPOINT = 'localhost:4000';
+  const ENDPOINT = 'https://parallel-chatting-app.herokuapp.com/';
 
   useEffect(() => {
     const { name, room } = queryString.parse(location.search);
@@ -66,9 +66,9 @@ const fetchOldMessage = async (groupname,name) => {
   
   let messages = [];
 
-  const apiCall = await fetch("http://localhost:4000/api/groups/"+groupname+"/message", {method: 'GET',});
+  const apiCall = await fetch("/api/groups/"+groupname+"/message", {method: 'GET',});
   const apiCall2 = await apiCall.json()
-  const apiCallLastTimeStamp = await fetch("http://localhost:4000/api/userRecords/"+name, {method: 'GET',});
+  const apiCallLastTimeStamp = await fetch("/api/userRecords/"+name, {method: 'GET',});
   const apiCallLastTimeStamp2 = await apiCallLastTimeStamp.json()
   
   var msgs = apiCall2.data;

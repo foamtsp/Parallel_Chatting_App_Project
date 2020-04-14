@@ -1,6 +1,7 @@
 {
   "name": "project_chat_application",
   "version": "0.1.0",
+  "proxy": "https://parallel-chatting-app.herokuapp.com/",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.9.9",

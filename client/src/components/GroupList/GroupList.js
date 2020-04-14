@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import './GroupList.css'
 import io from "socket.io-client";
-const ENDPOINT = 'localhost:4000';
+const ENDPOINT = 'https://parallel-chatting-app.herokuapp.com/';
 
 let socket = io(ENDPOINT);
 
@@ -13,7 +13,7 @@ const GroupList = ({ name}) => {
 
   const fetchGroupName = async () => {
     var list = [];
-    const apiCall = await fetch("http://localhost:4000/api/groups", { method: 'GET', });
+    const apiCall = await fetch("/api/groups", { method: 'GET', });
     const apiCall2 = await apiCall.json()
 
     var groupList = apiCall2.data;
@@ -40,7 +40,7 @@ const GroupList = ({ name}) => {
       groupName: groupName,
     }
   
-    await fetch("http://localhost:4000/api/users/" + name + "/joingroup", {
+    await fetch("/api/users/" + name + "/joingroup", {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(sending_data)
@@ -70,7 +70,7 @@ const GroupList = ({ name}) => {
     
 
   
-    await fetch("http://localhost:4000/api/users/" + name + "/leavegroup", {
+    await fetch("/api/users/" + name + "/leavegroup", {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(sending_data)

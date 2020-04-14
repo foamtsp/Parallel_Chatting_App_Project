@@ -12,7 +12,7 @@ import './Input.css';
 //         messages:text
 //       }
 
-//       fetch("http://localhost:4000/api/groups/"+groupname+"/message" , {
+//       fetch("/api/groups/"+groupname+"/message" , {
 //           method: 'POST',
 //           headers: { 'Content-Type': 'application/json' },
 //           body: JSON.stringify(sending_data)
