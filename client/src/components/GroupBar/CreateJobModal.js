@@ -36,7 +36,7 @@ const CreateJobModal = ({ name }) => {
           groupName:groupname
         }
 
-        fetch("https://parallel-chatting-app.herokuapp.com/api/groups" , {
+        fetch("/api/groups" , {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(sending_data)
@@ -47,7 +47,7 @@ const CreateJobModal = ({ name }) => {
             }
             return response.json();
           })
-        .then(timer = setTimeout(() => window.location.reload(false), 500));
+        .then(timer = setTimeout(() => window.location.reload(false), 2500));
     }
     
   }

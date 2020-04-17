@@ -56,7 +56,7 @@ const GroupList = ({ name}) => {
         });
         return response.json();
       })
-      .then(timer = setTimeout(() => window.location.reload(false), 1000));
+      .then(timer = setTimeout(() => window.location.href = "/chat?name=" + name + '&room=' + groupName, 1500));
   
   }
   
@@ -81,9 +81,9 @@ const GroupList = ({ name}) => {
         }
         return response.json();
       })
-      .then(timer = setTimeout(() => window.location.reload(false), 1000))
+      .then(timer = setTimeout(() => window.location.href = "/chat?name=" + name + '&room=default', 1500))
   
-      .then(window.location.href = "/chat?name=" + name + '&room=default');
+      // .then(window.location.href = "/chat?name=" + name + '&room=default');
   
   
   }

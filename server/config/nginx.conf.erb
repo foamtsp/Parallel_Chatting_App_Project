@@ -39,9 +39,13 @@ http {
 	sendfile on;
 
     upstream app_server {
-        ip_hash;
         server 127.0.0.1:4000;
-        server 127.0.0.1:4001;
+		server 127.0.0.1:4001;
+		server 127.0.0.1:4002;
+		server 127.0.0.1:4003;
+		server 127.0.0.1:4004;
+		server 127.0.0.1:4005;
+		server 127.0.0.1:4006;
  	}
 
 	server {
@@ -52,15 +56,14 @@ http {
 			proxy_pass http://app_server;
 			proxy_redirect off;
 			proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header Host $http_host;
+			proxy_set_header Host $http_host;
+			proxy_next_upstream error timeout http_502;
             
             # enable WebSockets
             proxy_http_version 1.1;
             proxy_set_header Upgrade $http_upgrade;
             proxy_set_header Connection "upgrade";
 
-			# # Rewrites
-			# rewrite /the-planets(.*)$ /planets$1 break;
 		}
 	}
 }
