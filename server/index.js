@@ -6,6 +6,7 @@ const dotenv = require('dotenv');
 const morgan = require('morgan');
 const cors = require('cors');
 const router = require('./router');
+const fs = require('fs');
 // const { addUser, removeUser, getUser, getUsersInRoom } = require('./users');
 const Group = require('./models/groupModel')
 const SocketController = require('./Controller/socketController')
@@ -168,6 +169,14 @@ io.on('connection', (socket) => {
 
 });
 
-server.listen(SERVER_PORT, () => {
-  console.log(`Server is running on port ${SERVER_PORT}...`);
+// server.listen(SERVER_PORT, () => {
+//   console.log(`Server is running on port ${SERVER_PORT}...`);
+// });
+
+server.listen(4000, function () {
+  if (process.env.DYNO) {
+      console.log('Running on Heroku...');
+      fs.openSync('/tmp/app-initialized', 'w');
+    }
+  console.log('Node app is running on port:', 4000);
 });

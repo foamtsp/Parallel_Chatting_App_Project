@@ -1,0 +1,96 @@
+daemon off;
+
+worker_processes <%= ENV['NGINX_WORKERS'] || 4 %>;
+
+events {
+	use epoll;
+	accept_mutex on;
+	worker_connections <%= ENV['NGINX_WORKER_CONNECTIONS'] || 1024 %>;
+}
+
+http {
+	# Buffers
+	client_body_buffer_size 10K;
+	client_header_buffer_size 1k;
+	client_max_body_size 8m;
+	large_client_header_buffers 2 1k;
+
+	# Timeouts
+	client_body_timeout 12;
+	client_header_timeout 12;
+	keepalive_timeout 15;
+	send_timeout 10;
+
+	# Gzip
+	gzip on;
+	gzip_comp_level 2;
+	gzip_min_length 1000;
+	gzip_proxied expired no-cache no-store private auth;
+	gzip_types text/plain application/x-javascript text/xml text/css application/xml;
+
+	# Logging
+	log_format l2met 'measure#nginx.service=$request_time request_id=$http_x_request_id';
+	access_log off;
+	error_log logs/nginx/error.log;
+
+	# Other
+	server_tokens off;
+	include mime.types;
+	sendfile on;
+
+    upstream app_server {
+        ip_hash;
+        # server 127.0.0.1:4000;
+        # server 127.0.0.1:4001;
+        server backend1.example.com:80;
+        server backend2.example.com:80;
+
+ 	}
+
+	server {
+		listen <%= ENV["PORT"] %>;
+		server_name _;
+
+		location / {
+			proxy_pass http://app_server;
+			proxy_redirect off;
+			proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header Host $http_host;
+            
+            # enable WebSockets
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+
+		}
+    }
+    
+    server {
+        listen      80;
+        server_name backend1.example.com;
+
+        # ssl_certificate        /etc/ssl/certs/server.crt;
+        # ssl_certificate_key    /etc/ssl/certs/server.key;
+        # ssl_client_certificate /etc/ssl/certs/ca.crt;
+        # ssl_verify_client      optional;
+
+        location / {
+            proxy_pass https://parallel-chat-server1.herokuapp.com;
+        #...
+        }
+
+    server {
+        listen      80;
+        server_name backend2.example.com;
+
+        # ssl_certificate        /etc/ssl/certs/server.crt;
+        # ssl_certificate_key    /etc/ssl/certs/server.key;
+        # ssl_client_certificate /etc/ssl/certs/ca.crt;
+        # ssl_verify_client      optional;
+
+        location / {
+            proxy_pass https://parallel-chat-server2.herokuapp.com;
+        #...
+        }
+    }
+}
