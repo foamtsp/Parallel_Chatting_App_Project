@@ -49,13 +49,15 @@ const GroupList = ({ name}) => {
         if (response.status >= 400) {
           throw new Error("Bad response from server");
         }
+        return response.json();
+      })
+      .then(
         socket.emit('join_group', { name, groupName }, (error) => {
           if (error) {
             alert(error);
           }
-        });
-        return response.json();
-      })
+        })
+      )
       .then(timer = setTimeout(() => window.location.href = "/chat?name=" + name + '&room=' + groupName, 1500));
   
   }
@@ -82,8 +84,6 @@ const GroupList = ({ name}) => {
         return response.json();
       })
       .then(timer = setTimeout(() => window.location.href = "/chat?name=" + name + '&room=default', 1500))
-  
-      // .then(window.location.href = "/chat?name=" + name + '&room=default');
   
   
   }
